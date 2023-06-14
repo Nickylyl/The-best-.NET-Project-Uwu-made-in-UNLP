@@ -1,1 +1,21 @@
 @page "/AgregarPoliza"
+@inject AgregarPolizaUseCase AgregarPolizaUseCase;
+@inject NavigationManager Navegador;
+
+<input placeholder="ID vehiculo" @bind="_poliza.VehiculoAsegurado" class="form-control">
+<input placeholder="Valor Asegurado" @bind="_poliza.ValorAsegurado" class="form-control">
+<input placeholder="Franquicia" @bind="_poliza.Franquicia" class="form-control">
+<input placeholder="Cobertura" @bind="_poliza.Cobertura" class="form-control">
+<input placeholder="Vencimiento" @bind="_poliza.VigenteHasta" class="form-control">
+<button class="btn btn-primary" @onclick="Cargar">Agregar</button>
+
+
+@code{
+    private Poliza _poliza = new Poliza();
+    private void Cargar()
+    {
+        _poliza.VigenteDesde = DateTime.Now;
+        AgregarPolizaUseCase.Ejecutar(_poliza);
+        Navegador.NavigateTo("/ListarPoliza");
+    }
+}
