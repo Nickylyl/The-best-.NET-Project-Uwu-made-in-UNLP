@@ -6,8 +6,8 @@ public class Siniestro
     public int Poliza {get;set;}
     public DateTime FechaCargaSistema {get;set;}
     public DateTime FechaOcurrencia {get;set;}
-    public string DireccionDelHecho {get;set;} = "";
-    public string DescripcionDelHecho {get;set;} = "";
+    public string? DireccionDelHecho {get;set;} 
+    public string? DescripcionDelHecho {get;set;} 
 
     public Siniestro(int id, int poliza, DateTime fechaOcurrencia, string direccionDelHecho, string descripcionDelHecho){
         this.ID = id;
@@ -18,4 +18,7 @@ public class Siniestro
         this.DireccionDelHecho = direccionDelHecho;
     }
 
+    public Siniestro(){
+
+    }
 }

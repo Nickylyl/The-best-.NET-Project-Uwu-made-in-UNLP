@@ -3,8 +3,8 @@ namespace Aseguradora.Aplicacion;
 public class Vehiculo
 {
     public int ID { get; set; } = -1;
-    public string Dominio { get; set; }
-    public string Marca { get; set; }
+    public string? Dominio { get; set; }
+    public string? Marca { get; set; }
     public int AnoFabricacion { get; set; }
     public int Titular { get; set; }
 
@@ -14,6 +14,10 @@ public class Vehiculo
         Marca = marca;
         AnoFabricacion = anoFabricacion;
         Titular = titular;
+    }
+
+    public Vehiculo(){
+
     }
 
     public override string ToString()
