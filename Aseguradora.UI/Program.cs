@@ -10,6 +10,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddTransient<ListarPolizasUseCase>();
+builder.Services.AddTransient<AgregarPolizaUseCase>();
 builder.Services.AddScoped<IRepoPoliza,RepoPolizas>();
 
 var app = builder.Build();
