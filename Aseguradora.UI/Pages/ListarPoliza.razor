@@ -1,0 +1,40 @@
+@page "/ListarPoliza"
+@inject ListarPolizasUseCase ListarPolizasUseCase
+
+<table class="Polizas">
+    <thead>
+    <tr>
+    <th>ID</th>
+    <th>PATENTE DEL VEHICULO ASEGURADO </th>
+    <th>VALOR ASEGURADO DEL VEHICULO</th>
+    <th>FRANQUICIA</th>
+    <th>COBERTURA</th>
+    <th>FECHA VIGENCIA</th>
+    <th>FECHA VENCIMIENTO</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    @foreach (var poliza in _lista)
+    {
+    <tr>
+        <td>@poliza.ID</td>
+        <td>@poliza.VehiculoAsegurado</td>
+        <td>@poliza.ValorAsegurado</td>
+        <td>@poliza.Franquicia</td>
+        <td>@poliza.Cobertura</td>
+        <td>@poliza.VigenteDesde</td>
+        <td>@poliza.VigenteHasta</td>
+    </tr>
+    }
+
+</tbody>
+</table>
+
+@code{
+    List<Poliza> _lista = new List<Poliza>();
+        protected override void OnInitialized()
+        {
+            _lista = ListarPolizasUseCase.Ejecutar(); 
+        }
+}
