@@ -1,0 +1,194 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.UI/Aseguradora.UI.csproj": {}
+  },
+  "projects": {
+    "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Aplicacion/Aseguradora.Aplicacion.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Aplicacion/Aseguradora.Aplicacion.csproj",
+        "projectName": "Aseguradora.Aplicacion",
+        "projectPath": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Aplicacion/Aseguradora.Aplicacion.csproj",
+        "packagesPath": "/home/alumnos/.nuget/packages/",
+        "outputPath": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Aplicacion/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/alumnos/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/alumnos/dotnet/sdk/7.0.304/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Repositorios/Aseguradora.Repositorios.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Repositorios/Aseguradora.Repositorios.csproj",
+        "projectName": "Aseguradora.Repositorios",
+        "projectPath": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Repositorios/Aseguradora.Repositorios.csproj",
+        "packagesPath": "/home/alumnos/.nuget/packages/",
+        "outputPath": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Repositorios/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/alumnos/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Aplicacion/Aseguradora.Aplicacion.csproj": {
+                "projectPath": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Aplicacion/Aseguradora.Aplicacion.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[7.0.7, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/alumnos/dotnet/sdk/7.0.304/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.UI/Aseguradora.UI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.UI/Aseguradora.UI.csproj",
+        "projectName": "Aseguradora.UI",
+        "projectPath": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.UI/Aseguradora.UI.csproj",
+        "packagesPath": "/home/alumnos/.nuget/packages/",
+        "outputPath": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.UI/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/alumnos/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "/home/alumnos/dotnet/sdk/7.0.304/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Aplicacion/Aseguradora.Aplicacion.csproj": {
+                "projectPath": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Aplicacion/Aseguradora.Aplicacion.csproj"
+              },
+              "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Repositorios/Aseguradora.Repositorios.csproj": {
+                "projectPath": "/home/alumnos/Documentos/TrabajoPracticoLYN/Aseguradora/Aseguradora.Repositorios/Aseguradora.Repositorios.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/alumnos/dotnet/sdk/7.0.304/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
