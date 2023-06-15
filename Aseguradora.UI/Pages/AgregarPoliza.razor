@@ -2,20 +2,74 @@
 @inject AgregarPolizaUseCase AgregarPolizaUseCase;
 @inject NavigationManager Navegador;
 
-<input placeholder="ID vehiculo" @bind="_poliza.VehiculoAsegurado" class="form-control">
-<input placeholder="Valor Asegurado" @bind="_poliza.ValorAsegurado" class="form-control">
-<input placeholder="Franquicia" @bind="_poliza.Franquicia" class="form-control">
-<input placeholder="Cobertura" @bind="_poliza.Cobertura" class="form-control">
-<input placeholder="Vencimiento" @bind="_poliza.VigenteHasta" class="form-control">
-<button class="btn btn-primary" @onclick="Cargar">Agregar</button>
+<PageTitle>Agregar Poliza</PageTitle>
+<h1>Agregar Poliza</h1>
 
+<div class="divPrincipal"tyle="">
+    <div class="divD">
+        <p class="divP">ID Vehiculo: </p>
+        <input @bind="_poliza.VehiculoAsegurado" class="form-control">
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">Valor Asegurado: </p>
+        <input @bind="_poliza.ValorAsegurado" class="form-control">
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">Franquicia: </p>
+        <input @bind="_poliza.Franquicia" class="form-control">
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">Cobertura: </p>
+        <InputSelect @bind-Value="_poliza.Cobertura" class="form-control">
+            <option value="Todo Riesgo">Todo Riesgo</option>
+            <option value="Responsabilidad Civil">Responsabilidad Civil</option>
+        </InputSelect>
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">Vencimiento: </p>
+        <InputDate style="width:100%;" @bind-Value="_poliza.VigenteHasta"/>
+        <br/>
+    </div>
+</div>
+<button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+
+<DialogoConfirmacion @ref=Dialogo Mensaje="@mensaje" OnConfirmado="null"/>
 
 @code{
+    DialogoConfirmacion? Dialogo;
+    private string mensaje ="";
     private Poliza _poliza = new Poliza();
+    protected override void OnInitialized()
+    {
+        _poliza.VigenteHasta = DateTime.Now.AddYears(1);
+        _poliza.Cobertura = "Responsabilidad Civil";
+        _poliza.Franquicia = "";
+    }
+    private void Comprobar()
+    {
+        if(_poliza.VigenteHasta.CompareTo(DateTime.Now)>0)
+        {
+            if(_poliza.Franquicia != "")
+            {
+                Cargar();
+            }else{
+                mensaje="No se ingreso una Franquicia";
+                Dialogo?.Mostrar();
+            }
+        }else{
+            mensaje="La fecha de vencimiento es incorrecta";
+            _poliza.VigenteHasta = DateTime.Now.AddYears(1);
+            Dialogo?.Mostrar();
+        }
+    }
     private void Cargar()
     {
         _poliza.VigenteDesde = DateTime.Now;
         AgregarPolizaUseCase.Ejecutar(_poliza);
-        Navegador.NavigateTo("/ListarPoliza");
+        Navegador.NavigateTo("/ListarPoliza");        
     }
 }
