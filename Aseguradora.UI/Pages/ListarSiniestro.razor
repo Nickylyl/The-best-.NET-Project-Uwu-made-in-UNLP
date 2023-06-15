@@ -1,1 +1,43 @@
 @page "/ListarSiniestro"
+
+@inject ListarSiniestrosUseCase ListarSiniestroUseCase
+
+<title> LISTAR SINIESTRO </title>
+<h3> <center> <b>LISTA DE SINIESTROS</b> </center> </h3>
+
+<table class="table">
+    <thead>
+    <tr>
+    <th>ID</th>
+    <th>POLIZA</th>
+    <th>FECHA CARGA</th>
+    <th>FECHA OCURRENCIA</th>
+    <th>DIRECCION DEL HECHO</th>
+    <th>DESCRIPCION</th>
+    </tr>
+    </thead>
+    <table border/>
+    <tbody>
+
+    @foreach (var siniestro in _lista)
+    {
+    <tr>
+        <td>@siniestro.ID</td>
+        <td>@siniestro.Poliza</td>
+        <td>@siniestro.FechaCargaSistema</td>
+        <td>@siniestro.FechaOcurrencia</td>
+        <td>@siniestro.DireccionDelHecho</td>
+        <td>@siniestro.DescripcionDelHecho</td>
+    </tr>
+    }
+
+</tbody>
+</table>
+
+@code{
+    List<Siniestro> _lista = new List<Siniestro>();
+        protected override void OnInitialized()
+        {
+            _lista = ListarSiniestroUseCase.Ejecutar(); 
+        }
+}

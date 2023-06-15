@@ -1,11 +1,14 @@
 @page "/ListarPoliza"
 @inject ListarPolizasUseCase ListarPolizasUseCase
 
+<title> LISTAR POLIZAS </title>
+<h3> <center> <b>LISTA DE POLIZAS</b> </center> </h3>
+
 <table class="table">
     <thead>
     <tr>
     <th>ID</th>
-    <th>PATENTE DEL VEHICULO ASEGURADO </th>
+    <th>ID VEHICULO</th>
     <th>VALOR ASEGURADO DEL VEHICULO</th>
     <th>FRANQUICIA</th>
     <th>COBERTURA</th>
@@ -13,6 +16,7 @@
     <th>FECHA VENCIMIENTO</th>
     </tr>
     </thead>
+    <table border/>
     <tbody>
 
     @foreach (var poliza in _lista)

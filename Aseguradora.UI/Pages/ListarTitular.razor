@@ -1,6 +1,38 @@
 @page "/ListarTitular"
+@inject ListarTitularesUseCase ListarTitularUseCase
 
 
-@code{
-    
+<title> LISTAR TITULARES </title>
+<h3> <center> <b>LISTA DE TITULARES</b> </center> </h3>
+
+<table class="table">
+    <thead>
+    <tr>
+    <th>DNI</th>
+    <th>Apellido</th>
+    <th>Nombre</th>
+    <th>Direccion</th>
+    <th>Email</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @foreach(var titular in _lista){
+        <tr>
+            <td>@titular.DNI</td>
+            <td>@titular.Apellido</td>
+            <td>@titular.Nombre</td>
+            <td>@titular.Direccion</td>
+            <td>@titular.Email</td>
+        </tr>
+    }
+
+    </tbody>
+    </table>
+
+@code{ 
+    List<Titular> _lista = new List<Titular>();
+        protected override void OnInitialized(){
+            _lista = ListarTitularUseCase.Ejecutar();
+        }
 }

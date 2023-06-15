@@ -1,0 +1,40 @@
+@page "/ListarTercero"
+
+@inject ListarTercerosUseCase ListarTercerosUseCase
+
+<title> LISTAR TERCERO </title>
+<h3> <center> <b>LISTA DE TERCEROS</b> </center> </h3>
+
+<table class="table">
+    <thead>
+    <tr>
+    <th>ID</th>
+    <th>DNI</th>
+    <th>APELLIDO</th>
+    <th>NOMBRE</th>
+    <th>ASEGURADORA</th>
+    <th>SINIESTRO</th>
+    </tr>
+    </thead>
+    <table border/>
+    <tbody>
+
+    @foreach (var tercero in _lista)
+    {
+    <tr>
+        <td>@tercero.ID</td>
+       
+        
+    </tr>
+    }
+
+</tbody>
+</table>
+
+@code{
+    List<Tercero> _lista = new List<Tercero>();
+        protected override void OnInitialized()
+        {
+            _lista = ListarTercerosUseCase.Ejecutar();
+        }
+}
