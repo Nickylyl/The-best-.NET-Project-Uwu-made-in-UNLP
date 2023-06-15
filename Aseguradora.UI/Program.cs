@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Aseguradora.UI.Data;
+using Aseguradora.Repositorios;
+using Aseguradora.Aplicacion;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +14,34 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddTransient<ListarPolizasUseCase>();
 builder.Services.AddTransient<AgregarPolizaUseCase>();
+builder.Services.AddTransient<EliminarPolizaUseCase>();
+builder.Services.AddTransient<ModificarPolizaUseCase>();
 builder.Services.AddScoped<IRepoPoliza,RepoPolizas>();
+
+builder.Services.AddTransient<ListarTitularesUseCase>();
+builder.Services.AddTransient<AgregarTitularUseCase>();
+builder.Services.AddTransient<ModificarTitularUseCase>();
+builder.Services.AddTransient<EliminarTitularUseCase>();
+builder.Services.AddScoped<IRepoTitular,RepoTitulares>();
+
+builder.Services.AddTransient<ListarSiniestrosUseCase>();
+builder.Services.AddTransient<AgregarSiniestroUseCase>();
+builder.Services.AddTransient<ModificarSiniestroUseCase>();
+builder.Services.AddTransient<EliminarSiniestroUseCase>();
+builder.Services.AddScoped<IRepoSiniestro,RepoSiniestro>();
+
+builder.Services.AddTransient<ListarVehiculosUseCase>();
+builder.Services.AddTransient<AgregarVehiculoUseCase>();
+builder.Services.AddTransient<ModificarVehiculoUseCase>();
+builder.Services.AddTransient<EliminarVehiculoUseCase>();
+builder.Services.AddScoped<IRepoVehiculo,RepoVehiculo>();
+
+builder.Services.AddTransient<ListarTercerosUseCase>();
+builder.Services.AddTransient<AgregarTerceroUseCase>();
+builder.Services.AddTransient<EliminarTerceroUseCase>();
+builder.Services.AddTransient<ModificarTerceroUseCase>();
+builder.Services.AddScoped<IRepoTercero,RepoTerceros>();
+
 
 var app = builder.Build();
 
