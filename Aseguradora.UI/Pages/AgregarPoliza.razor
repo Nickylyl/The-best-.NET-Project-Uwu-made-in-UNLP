@@ -1,5 +1,6 @@
 @page "/Poliza/{IdRecivido:int?}"
 @inject AgregarPolizaUseCase AgregarPolizaUseCase;
+@inject ModificarPolizaUseCase ModificarPolizaUseCase;
 @inject ObtenerPolizaUseCase ObtenerPolizaUseCase;
 @inject NavigationManager Navegador;
 
@@ -35,13 +36,27 @@
         </InputSelect>
         <br/>
     </div>
+    @if(!_nuevaPoliza)
+    {
+        <div class="divD">
+            <p class="divP">Vigente desde: </p>
+            <InputDate style="width:100%;" @bind-Value="_poliza.VigenteDesde"/>
+            <br/>
+        </div>
+    }
     <div class="divD">
         <p class="divP">Vencimiento: </p>
         <InputDate style="width:100%;" @bind-Value="_poliza.VigenteHasta"/>
         <br/>
     </div>
 </div>
-<button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+@if(_nuevaPoliza)
+{
+    <button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+}else{
+    <button class="btn btn-primary" @onclick="Modificar">Modificar</button>
+}
+
 
 <DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}"/>
 
@@ -67,6 +82,16 @@
             _poliza.VigenteHasta = DateTime.Now.AddYears(1);
             _poliza.Cobertura = "Responsabilidad Civil";
             _poliza.Franquicia = "";
+        }
+    }
+    private void Modificar()
+    {
+        try{
+            ModificarPolizaUseCase.Ejecutar(_poliza);
+            Navegador.NavigateTo("/ListarPoliza");
+        }catch(Exception e){
+            if(Dialogo!=null) Dialogo.Mensaje = e.Message;
+            Dialogo?.Mostrar();
         }
     }
     private void Comprobar()
