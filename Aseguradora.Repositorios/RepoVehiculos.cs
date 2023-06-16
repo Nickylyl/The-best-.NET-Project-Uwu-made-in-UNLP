@@ -42,9 +42,10 @@ public class RepoVehiculo : IRepoVehiculo
             Vehiculo? ve = context.Vehiculos.Where(n => n.Dominio==V.Dominio).SingleOrDefault();
             if(ve != null)
             {
-                V.ID = ve.ID;
-                context.Remove(ve);
-                context.Add(V);
+                ve.AnoFabricacion = V.AnoFabricacion;
+                ve.Dominio = V.Dominio;
+                ve.Marca = V.Marca;
+                ve.Titular = V.Titular;
                 context.SaveChanges();
             }else{
                 throw new Exception("No existe el vehículo con Dominio: "+V.Dominio);

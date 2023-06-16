@@ -34,12 +34,14 @@ public class RepoSiniestro : IRepoSiniestro
         comprobarExistencia();
         using(var context = new AseguradoraContext())
         {
-            var s = context.Polizas.Where(n => n.ID==S.ID).SingleOrDefault();
-            if(s != null)
+            var sin = context.Siniestros.Where(n => n.ID==S.ID).SingleOrDefault();
+            if(sin != null)
             {
-                S.ID = s.ID;
-                context.Remove(s);
-                context.Add(S);
+                sin.DescripcionDelHecho = S.DescripcionDelHecho;
+                sin.DireccionDelHecho = S.DireccionDelHecho;
+                sin.FechaCargaSistema = S.FechaCargaSistema;
+                sin.FechaOcurrencia = S.FechaOcurrencia;
+                sin.Poliza = S.Poliza;
                 context.SaveChanges();
             }else{
                 throw new Exception("No existe Siniestro con ID: "+S.ID);

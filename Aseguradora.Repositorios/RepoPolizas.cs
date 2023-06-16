@@ -47,10 +47,23 @@ public class RepoPolizas : IRepoPoliza
             var Pol = context.Polizas.Where(n => n.ID==p.ID).SingleOrDefault();
             if(Pol != null)
             {
-                p.ID = Pol.ID;
-                context.Remove(Pol);
-                context.Add(p);
-                context.SaveChanges();
+                if(p.VigenteHasta.CompareTo(p.VigenteDesde)>0)
+                {
+                    if(p.Franquicia!="")
+                    {
+                        Pol.Cobertura = p.Cobertura;
+                        Pol.Franquicia = p.Franquicia;
+                        Pol.ValorAsegurado = p.ValorAsegurado;
+                        Pol.VehiculoAsegurado = p.VehiculoAsegurado;
+                        Pol.VigenteDesde = p.VigenteDesde;
+                        Pol.VigenteHasta = p.VigenteHasta;
+                        context.SaveChanges();
+                    }else{
+                        throw new Exception("No se ingreso una Franquicia");
+                    }
+                }else{
+                    throw new Exception("Las fechas de vigencias no son validas");
+                }
             }else{
                 throw new Exception("No existe poliza con ID:"+p.ID);
             }

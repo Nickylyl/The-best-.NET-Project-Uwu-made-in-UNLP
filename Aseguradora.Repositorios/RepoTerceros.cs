@@ -38,11 +38,14 @@ public class RepoTerceros : IRepoTercero
     {
         comprobarExistencia();
         using(var context = new AseguradoraContext()){
-            var t = context.Terceros.Where(ter => ter.DNI == T.DNI).SingleOrDefault();
-            if( t != null){
-                T.ID = t.ID;
-                context.Remove(t);
-                context.Add(T);
+            var ter = context.Terceros.Where(ter => ter.DNI == T.DNI).SingleOrDefault();
+            if( ter != null){
+                ter.Apellido = T.Apellido;
+                ter.Aseguradora = T.Aseguradora;
+                ter.DNI = T.DNI;
+                ter.Nombre = T.Nombre;
+                ter.Siniestro = T.Siniestro;
+                ter.Telefono = T.Telefono;
                 context.SaveChanges();
             }
             else{

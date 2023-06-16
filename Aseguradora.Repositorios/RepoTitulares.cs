@@ -45,15 +45,18 @@ public class RepoTitulares : IRepoTitular{
     {
         comprobarExistencia();
         using(var context = new AseguradoraContext()){
-            var t = context.Titulares.Where(tit => tit.DNI == T.DNI).SingleOrDefault();
-            if( t != null){
-                T.ID = t.ID;
-                context.Remove(t);
-                context.Add(t);
+            var tit = context.Titulares.Where(tit => tit.DNI == T.DNI).SingleOrDefault();
+            if( tit != null){
+                tit.Apellido = T.Apellido;
+                tit.Direccion = T.Direccion;
+                tit.DNI = T.DNI;
+                tit.Email = T.Email;
+                tit.Nombre = T.Nombre;
+                tit.Telefono = T.Telefono;
                 context.SaveChanges();
             }
             else{
-                throw new Exception("El Titular = {0} ingresado a modificar no existe." + T.ToString());
+                throw new Exception("El Titular ingresado a modificar no existe.");
             }
         }
     }
