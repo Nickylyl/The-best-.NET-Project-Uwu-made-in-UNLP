@@ -1,7 +1,9 @@
-@page "/ListarVehiculo"
+@page "/ListarVehiculo/{Id:int?}"
 
 @inject ListarVehiculosUseCase ListarVehiculosUseCase
 @inject EliminarVehiculoUseCase EliminarVehiculoUseCase
+@inject ObtenerTitularUseCase ObtenerTitularUseCase
+@inject ListarVehiculosCondUseCase ListarVehiculosCondUseCase
 @inject NavigationManager Navegador; 
 
 <DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarVehiculo"/>
@@ -33,7 +35,7 @@
             <button class="btn btn-primary" @onclick ="() => ConfirmarModificarVehiculo(vehiculo.ID)">
                 <span class = "oi oi-pencil"></span>
             </button>
-            <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarVehiculo(vehiculo)"> 
+            <button class ="btn btn-danger" @onclick ="()=>ConfirmarEliminarVehiculo(vehiculo)"> 
                 <span class = "oi oi-delete"></span>
             </button>
         </td>
@@ -43,8 +45,20 @@
 
 @code{ 
     List<Vehiculo> _lista = new List<Vehiculo>();
-        protected override void OnInitialized(){
-            _lista = ListarVehiculosUseCase.Ejecutar();
+
+    [Parameter] public int? Id {get; set; }
+
+
+        protected override void OnParametersSet(){
+            if( Id != null){ 
+                Titular? titular = ObtenerTitularUseCase.Ejecutar(Id.Value);
+                if(titular != null){
+                    _lista = ListarVehiculosCondUseCase.Ejecutar( v => v.Titular == Id.Value );
+                }
+            }
+            else{
+                _lista = ListarVehiculosUseCase.Ejecutar();
+            }
         }
 
         Vehiculo? vehiAEliminar = null;
