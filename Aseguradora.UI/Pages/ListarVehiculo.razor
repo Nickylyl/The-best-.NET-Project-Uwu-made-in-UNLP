@@ -2,6 +2,7 @@
 
 @inject ListarVehiculosUseCase ListarVehiculosUseCase
 @inject EliminarVehiculoUseCase EliminarVehiculoUseCase
+@inject NavigationManager Navegador; 
 
 <DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarVehiculo"/>
 <title> LISTAR VEHICULO </title>
@@ -29,7 +30,7 @@
             <td>@vehiculo.Titular</td>
         </tr>
         <td>
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" @onclick ="() => ConfirmarModificarVehiculo(vehiculo.ID)">
                 <span class = "oi oi-pencil"></span>
             </button>
             <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarVehiculo(vehiculo)"> 
@@ -59,6 +60,10 @@
                 EliminarVehiculoUseCase.Ejecutar(vehiAEliminar.ID);
                 _lista = ListarVehiculosUseCase.Ejecutar();
             }
+        }
+
+        private void ConfirmarModificarVehiculo(int id){
+            Navegador.NavigateTo("/Vehiculo/" + id);
         }
 
 

@@ -2,10 +2,13 @@
 
 @inject ListarPolizasUseCase ListarPolizasUseCase
 @inject EliminarPolizaUseCase EliminarPolizaUseCase
+@inject NavigationManager Navegador;
+
 
 <DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarPoliza"/>
 <title> LISTAR POLIZAS </title>
 <h3> <center> <b>LISTA DE POLIZAS</b> </center> </h3>
+
 
 <table class="table">
     <thead>
@@ -15,7 +18,7 @@
     <th>VALOR ASEGURADO DEL VEHICULO</th>
     <th>FRANQUICIA</th>
     <th>COBERTURA</th>
-    <th>FECHA VIGENCIA</th>
+    <th>FECHA VIGENCIA</th>Poliz
     <th>FECHA VENCIMIENTO</th>
     <th>MODIFICAR-ELIMINAR</th>
     </tr>
@@ -34,7 +37,7 @@
         <td>@poliza.VigenteDesde</td>
         <td>@poliza.VigenteHasta</td>
         <td>
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" @onclick ="()=> ConfimarModificarPoliza(poliza.ID)">
                 <span class = "oi oi-pencil"></span>
             </button>
             <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarPoliza(poliza)"> 
@@ -68,5 +71,11 @@
                 EliminarPolizaUseCase.Ejecutar(polizaAEliminar.ID);
                 _lista = ListarPolizasUseCase.Ejecutar();
             }
+        }
+
+        private void ConfimarModificarPoliza(int id){
+            Navegador.NavigateTo("/Poliza/" +id);
+
+
         }
 }   

@@ -2,7 +2,7 @@
 
 @inject ListarSiniestrosUseCase ListarSiniestroUseCase
 @inject EliminarSiniestroUseCase EliminarSiniestroUseCase
-
+@inject NavigationManager Navegador;
 
 <DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarSiniestro"></DialogoConfirmacion>
 <title> LISTAR SINIESTRO </title>
@@ -32,7 +32,7 @@
         <td>@siniestro.DescripcionDelHecho</td>
     </tr>
     <td>
-         <button class="btn btn-primary">
+         <button class="btn btn-primary" @onclick=" () => ConfirmarModificarSiniestro(siniestro.ID)">
          <span class = "oi oi-pencil"></span>
          </button>
          <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarSiniestro(siniestro)"> 
@@ -64,5 +64,9 @@
                 EliminarSiniestroUseCase.Ejecutar(siniestroAEliminar.ID);
                 _lista = ListarSiniestroUseCase.Ejecutar();
             }
+        }
+
+        private void ConfirmarModificarSiniestro(int id){
+            Navegador.NavigateTo("/Siniestro" +id);
         }
 }

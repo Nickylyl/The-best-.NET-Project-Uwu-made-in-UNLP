@@ -2,7 +2,7 @@
 
 @inject ListarTercerosUseCase ListarTercerosUseCase
 @inject EliminarTerceroUseCase EliminarTerceroUseCase
-
+@inject NavigationManager Navegador
 
 <DialogoConfirmacion @ref="mensaje" OnConfirmado="eliminarTercero"/>
 <title> LISTAR TERCERO </title>
@@ -34,7 +34,7 @@
     </tr>
     
     <td>
-         <button class="btn btn-primary">
+         <button class="btn btn-primary" @onclick="() => ConfirmarModificarTercero(tercero.ID)">
          <span class = "oi oi-pencil"></span>
          </button>
          <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarTercero(tercero)"> 
@@ -67,5 +67,9 @@
                 EliminarTerceroUseCase.Ejecutar(terceroAEliminar.ID);
                 _lista = ListarTercerosUseCase.Ejecutar();
             }
+        }
+
+        private void ConfirmarModificarTercero(int id){
+            Navegador.NavigateTo("/Tercero/" +id);
         }
 }
