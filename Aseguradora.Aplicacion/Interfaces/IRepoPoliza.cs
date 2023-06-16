@@ -5,4 +5,5 @@ public interface IRepoPoliza
     public void ModificarPoliza(Poliza P);
     public void EliminarPoliza(int Id);
     public List<Poliza> ListarPolizas();
+    public Poliza? ObtenerPoliza(int Id);
 }

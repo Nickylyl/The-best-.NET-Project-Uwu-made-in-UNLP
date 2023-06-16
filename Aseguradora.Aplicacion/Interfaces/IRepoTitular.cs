@@ -5,4 +5,5 @@ public interface IRepoTitular
     public void ModificarTitular(Titular T);
     public void EliminarTitular(int Id);
     public List<Titular> ListarTitulares();
+    public Titular? ObtenerTitular(int Id);
 }

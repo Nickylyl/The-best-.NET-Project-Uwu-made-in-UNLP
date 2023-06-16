@@ -5,4 +5,5 @@ public interface IRepoSiniestro
     public void ModificarSiniestro(Siniestro S);
     public void EliminarSiniestro(int S);
     public List<Siniestro> ListarSiniestros();
+    public Siniestro? ObtenerSiniestro(int Id);
 }
