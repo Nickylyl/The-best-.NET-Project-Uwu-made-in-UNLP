@@ -1,19 +1,21 @@
 @page "/ListarVehiculo"
 
 @inject ListarVehiculosUseCase ListarVehiculosUseCase
+@inject EliminarVehiculoUseCase EliminarVehiculoUseCase
 
-
+<DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarVehiculo"/>
 <title> LISTAR VEHICULO </title>
 <h3> <center> <b>LISTA DE VEHICULO</b> </center> </h3>
 
 <table class="table">
     <thead>
     <tr>
-    <th>DNI</th>
-    <th>Apellido</th>
-    <th>Nombre</th>
-    <th>Direccion</th>
-    <th>Email</th>
+    <th>ID</th>
+    <th>Dominio</th>
+    <th>Marca</th>
+    <th>Año Fabricacion</th>
+    <th>Titular</th>
+    <th>MODIFICAR-ELIMINAR</th>
     </tr>
     </thead>
 
@@ -26,7 +28,15 @@
             <td>@vehiculo.AnoFabricacion</td>
             <td>@vehiculo.Titular</td>
         </tr>
-    }
+        <td>
+            <button class="btn btn-primary">
+                <span class = "oi oi-pencil"></span>
+            </button>
+            <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarVehiculo(vehiculo)"> 
+                <span class = "oi oi-delete"></span>
+            </button>
+        </td>
+    } 
     </tbody>
     </table> 
 
@@ -35,4 +45,21 @@
         protected override void OnInitialized(){
             _lista = ListarVehiculosUseCase.Ejecutar();
         }
+
+        Vehiculo? vehiAEliminar = null;
+        DialogoConfirmacion mensaje = null!;
+        private void ConfirmarEliminarVehiculo(Vehiculo vehi){
+            vehiAEliminar = vehi;
+            mensaje.Mensaje = $"¿Esta seguro que quiere eliminar el vehiculo {vehi.Marca} del Titular {vehi.Titular}?";
+            _lista = ListarVehiculosUseCase.Ejecutar();
+        }
+
+        private void EliminarVehiculo(){
+            if( vehiAEliminar != null){
+                EliminarVehiculoUseCase.Ejecutar(vehiAEliminar.ID);
+                _lista = ListarVehiculosUseCase.Ejecutar();
+            }
+        }
+
+
 }

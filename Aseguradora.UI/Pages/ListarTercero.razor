@@ -1,7 +1,10 @@
 @page "/ListarTercero"
 
 @inject ListarTercerosUseCase ListarTercerosUseCase
+@inject EliminarTerceroUseCase EliminarTerceroUseCase
 
+
+<DialogoConfirmacion @ref="mensaje" OnConfirmado="eliminarTercero"/>
 <title> LISTAR TERCERO </title>
 <h3> <center> <b>LISTA DE TERCEROS</b> </center> </h3>
 
@@ -14,18 +17,30 @@
     <th>NOMBRE</th>
     <th>ASEGURADORA</th>
     <th>SINIESTRO</th>
+    <th>MODIFICAR-ELIMINAR</th>
     </tr>
     </thead>
-    <table border/>
     <tbody>
 
     @foreach (var tercero in _lista)
     {
     <tr>
         <td>@tercero.ID</td>
-       
-        
+        <td>@tercero.DNI</td>
+        <td>@tercero.Apellido</td>
+        <td>@tercero.Nombre</td>
+        <td>@tercero.Aseguradora</td>
+        <td>@tercero.Siniestro</td>      
     </tr>
+    
+    <td>
+         <button class="btn btn-primary">
+         <span class = "oi oi-pencil"></span>
+         </button>
+         <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarTercero(tercero)"> 
+         <span class = "oi oi-delete"></span>
+         </button>
+    </td>
     }
 
 </tbody>
@@ -36,5 +51,21 @@
         protected override void OnInitialized()
         {
             _lista = ListarTercerosUseCase.Ejecutar();
+        }
+
+        DialogoConfirmacion mensaje = null!;
+        Tercero? terceroAEliminar = null; 
+
+        private void ConfirmarEliminarTercero(Tercero tercero){
+            terceroAEliminar = tercero;
+            mensaje.Mensaje = $"¿Esta seguro que quiere eliminar el Tercero {tercero.Nombre} {tercero.Apellido} ?";
+            mensaje.Mostrar();
+        }
+
+        private void eliminarTercero(){
+            if( terceroAEliminar != null ){
+                EliminarTerceroUseCase.Ejecutar(terceroAEliminar.ID);
+                _lista = ListarTercerosUseCase.Ejecutar();
+            }
         }
 }

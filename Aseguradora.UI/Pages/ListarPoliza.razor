@@ -1,6 +1,9 @@
 @page "/ListarPoliza"
-@inject ListarPolizasUseCase ListarPolizasUseCase
 
+@inject ListarPolizasUseCase ListarPolizasUseCase
+@inject EliminarPolizaUseCase EliminarPolizaUseCase
+
+<DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarPoliza"/>
 <title> LISTAR POLIZAS </title>
 <h3> <center> <b>LISTA DE POLIZAS</b> </center> </h3>
 
@@ -14,6 +17,7 @@
     <th>COBERTURA</th>
     <th>FECHA VIGENCIA</th>
     <th>FECHA VENCIMIENTO</th>
+    <th>MODIFICAR-ELIMINAR</th>
     </tr>
     </thead>
     <table border/>
@@ -29,6 +33,14 @@
         <td>@poliza.Cobertura</td>
         <td>@poliza.VigenteDesde</td>
         <td>@poliza.VigenteHasta</td>
+        <td>
+            <button class="btn btn-primary">
+                <span class = "oi oi-pencil"></span>
+            </button>
+            <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarPoliza(poliza)"> 
+                <span class = "oi oi-delete"></span>
+            </button>
+        </td>
     </tr>
     }
 
@@ -41,4 +53,20 @@
         {
             _lista = ListarPolizasUseCase.Ejecutar(); 
         }
-}
+
+
+        Poliza? polizaAEliminar = null;
+        DialogoConfirmacion mensaje = null!;
+        private void ConfirmarEliminarPoliza(Poliza poliza){
+            polizaAEliminar = poliza;
+            mensaje.Mensaje = $"¿Esta seguro que quiere eliminar a la poliza del vehiculo {poliza.VehiculoAsegurado}?";
+            mensaje.Mostrar();
+        }
+
+        private void EliminarPoliza(){
+            if( polizaAEliminar != null){
+                EliminarPolizaUseCase.Ejecutar(polizaAEliminar.ID);
+                _lista = ListarPolizasUseCase.Ejecutar();
+            }
+        }
+}   

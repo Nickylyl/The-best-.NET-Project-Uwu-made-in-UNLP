@@ -1,7 +1,8 @@
 @page "/ListarTitular"
 @inject ListarTitularesUseCase ListarTitularUseCase
+@inject EliminarTitularUseCase EliminarTitularUseCase
 
-
+<DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarTitular"/>
 <title> LISTAR TITULARES </title>
 <h3> <center> <b>LISTA DE TITULARES</b> </center> </h3>
 
@@ -13,6 +14,7 @@
     <th>Nombre</th>
     <th>Direccion</th>
     <th>Email</th>
+    <th>MODIFICAR-ELIMINAR</th>
     </tr>
     </thead>
 
@@ -25,6 +27,14 @@
             <td>@titular.Direccion</td>
             <td>@titular.Email</td>
         </tr>
+        <td>
+            <button class="btn btn-primary">
+            <span class = "oi oi-pencil"></span>
+            </button>
+            <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarTitular(titular)"> 
+            <span class = "oi oi-delete"></span>
+            </button>
+        </td>
     }
 
     </tbody>
@@ -35,4 +45,19 @@
         protected override void OnInitialized(){
             _lista = ListarTitularUseCase.Ejecutar();
         }
-}
+
+        Titular? titularAEliminar = null;
+        DialogoConfirmacion mensaje = null!;
+        private void ConfirmarEliminarTitular(Titular titular){
+            titularAEliminar = titular;
+            mensaje.Mensaje = $"¿Esta seguro que quiere eliminar el titular {titular.Nombre} {titular.Apellido}?";
+            mensaje.Mostrar();
+        }
+
+        private void EliminarTitular(){
+            if( titularAEliminar != null){
+                EliminarTitularUseCase.Ejecutar(titularAEliminar.ID);
+                _lista = ListarTitularUseCase.Ejecutar();
+            }
+        }
+}   

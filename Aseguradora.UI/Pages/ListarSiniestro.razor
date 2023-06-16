@@ -1,7 +1,10 @@
 @page "/ListarSiniestro"
 
 @inject ListarSiniestrosUseCase ListarSiniestroUseCase
+@inject EliminarSiniestroUseCase EliminarSiniestroUseCase
 
+
+<DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarSiniestro"></DialogoConfirmacion>
 <title> LISTAR SINIESTRO </title>
 <h3> <center> <b>LISTA DE SINIESTROS</b> </center> </h3>
 
@@ -13,10 +16,9 @@
     <th>FECHA CARGA</th>
     <th>FECHA OCURRENCIA</th>
     <th>DIRECCION DEL HECHO</th>
-    <th>DESCRIPCION</th>
+    <th>MODIFICAR-ELIMINAR</th>
     </tr>
     </thead>
-    <table border/>
     <tbody>
 
     @foreach (var siniestro in _lista)
@@ -29,6 +31,14 @@
         <td>@siniestro.DireccionDelHecho</td>
         <td>@siniestro.DescripcionDelHecho</td>
     </tr>
+    <td>
+         <button class="btn btn-primary">
+         <span class = "oi oi-pencil"></span>
+         </button>
+         <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarSiniestro(siniestro)"> 
+         <span class = "oi oi-delete"></span>
+         </button>
+     </td>
     }
 
 </tbody>
@@ -39,5 +49,20 @@
         protected override void OnInitialized()
         {
             _lista = ListarSiniestroUseCase.Ejecutar(); 
+        }
+
+        DialogoConfirmacion mensaje = null;
+        Siniestro? siniestroAEliminar = null;
+        private void ConfirmarEliminarSiniestro(Siniestro siniestro){
+            siniestroAEliminar = siniestro;
+            mensaje.Mensaje = $"¿Esta seguro que quiere eliminar el siniestro del dia {siniestro.FechaOcurrencia}?";
+            mensaje.Mostrar();
+        }
+
+        private void EliminarSiniestro(){
+            if( siniestroAEliminar != null){
+                EliminarSiniestroUseCase.Ejecutar(siniestroAEliminar.ID);
+                _lista = ListarSiniestroUseCase.Ejecutar();
+            }
         }
 }
