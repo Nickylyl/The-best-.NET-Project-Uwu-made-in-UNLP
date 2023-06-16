@@ -23,10 +23,20 @@ public class RepoPolizas : IRepoPoliza
     public void AgregarPoliza(Poliza p)
     {
         comprobarExistencia();
-        using(var context = new AseguradoraContext())
+        if(p.VigenteHasta.CompareTo(p.VigenteDesde)>0)
         {
-            context.Add(p);
-            context.SaveChanges();
+            if(p.Franquicia!="")
+            {
+                using (var context = new AseguradoraContext())
+                {
+                    context.Add(p);
+                    context.SaveChanges();
+                }
+            }else{
+                throw new Exception("No se ingreso una Franquicia");
+            }
+        }else{
+            throw new Exception("La fecha de vencimiento es incorrecta");
         }
     }
     public void ModificarPoliza(Poliza p)
@@ -38,7 +48,8 @@ public class RepoPolizas : IRepoPoliza
             if(Pol != null)
             {
                 p.ID = Pol.ID;
-                context.Update(p);
+                context.Remove(Pol);
+                context.Add(p);
                 context.SaveChanges();
             }else{
                 throw new Exception("No existe poliza con ID:"+p.ID);
@@ -69,5 +80,15 @@ public class RepoPolizas : IRepoPoliza
             listado = context.Polizas.ToList();
         }
         return listado;
+    }
+    public Poliza? ObtenerPoliza(int Id)
+    {
+        comprobarExistencia();
+        Poliza? p;
+        using(var context = new AseguradoraContext())
+        {
+            p = context.Polizas.Where(pol => pol.ID == Id).SingleOrDefault();
+        }
+        return p;
     }
 }

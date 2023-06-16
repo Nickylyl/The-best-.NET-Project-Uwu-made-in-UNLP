@@ -38,7 +38,8 @@ public class RepoSiniestro : IRepoSiniestro
             if(s != null)
             {
                 S.ID = s.ID;
-                context.Update(S);
+                context.Remove(s);
+                context.Add(S);
                 context.SaveChanges();
             }else{
                 throw new Exception("No existe Siniestro con ID: "+S.ID);
@@ -69,5 +70,14 @@ public class RepoSiniestro : IRepoSiniestro
             listado = context.Siniestros.ToList();
         }
         return listado;
+    }
+    public Siniestro? ObtenerSiniestro(int Id)
+    {
+        Siniestro? s;
+        using(var context = new AseguradoraContext())
+        {
+            s = context.Siniestros.Where(sin => sin.ID == Id).SingleOrDefault();
+        }
+        return s;
     }
 }

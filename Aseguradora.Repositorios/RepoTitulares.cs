@@ -27,11 +27,16 @@ public class RepoTitulares : IRepoTitular{
         using(var context = new AseguradoraContext()){
             var t = context.Titulares.Where(tit=> tit.DNI == T.DNI).SingleOrDefault();
             if( t == null){
-                context.Add(T);
-                context.SaveChanges();
+                if(T.DNI>0 && T.Nombre!="" && T.Apellido!="")
+                {
+                    context.Add(T);
+                    context.SaveChanges();
+                }else{
+                    throw new Exception("Los campos DNI, Nombre y Apellido son obligatorios");
+                }
             }
             else{
-                throw new Exception("El Titular = {0} ya existe, no se pudo agregar." + T.ToString());
+                throw new Exception("El Titular ya existe");
             }
         }
     }
@@ -42,7 +47,9 @@ public class RepoTitulares : IRepoTitular{
         using(var context = new AseguradoraContext()){
             var t = context.Titulares.Where(tit => tit.DNI == T.DNI).SingleOrDefault();
             if( t != null){
-                t = T;
+                T.ID = t.ID;
+                context.Remove(t);
+                context.Add(t);
                 context.SaveChanges();
             }
             else{
@@ -72,5 +79,14 @@ public class RepoTitulares : IRepoTitular{
             listita = context.Titulares.ToList();
         }
         return listita;
+    }
+    public Titular? ObtenerTitular(int Id)
+    {
+        Titular? t;
+        using(var context = new AseguradoraContext())
+        {
+            t = context.Titulares.Where(tit => tit.ID == Id).SingleOrDefault();
+        }
+        return t;
     }
 }

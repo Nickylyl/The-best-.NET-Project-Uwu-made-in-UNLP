@@ -30,7 +30,7 @@ public class RepoTerceros : IRepoTercero
                 context.SaveChanges();
             }
             else{
-                throw new Exception("El Tercero = {0} ya existe, no se pudo agregar." + T.ToString());
+                throw new Exception("El Tercero ya existe");
             }
         }
     }
@@ -40,7 +40,9 @@ public class RepoTerceros : IRepoTercero
         using(var context = new AseguradoraContext()){
             var t = context.Terceros.Where(ter => ter.DNI == T.DNI).SingleOrDefault();
             if( t != null){
-                t = T;
+                T.ID = t.ID;
+                context.Remove(t);
+                context.Add(T);
                 context.SaveChanges();
             }
             else{
@@ -71,5 +73,14 @@ public class RepoTerceros : IRepoTercero
             listita = context.Terceros.ToList();
         }
         return listita;
+    }
+    public Tercero? ObtenerTercero(int Id)
+    {
+        Tercero? t;
+        using(var context = new AseguradoraContext())
+        {
+            t = context.Terceros.Where(ter => ter.ID == Id).SingleOrDefault();
+        }
+        return t;
     }
 }

@@ -23,10 +23,15 @@ public class RepoVehiculo : IRepoVehiculo
     public void AgregarVehiculo(Vehiculo v)
     {
         comprobarExistencia();
-        using(var context = new AseguradoraContext())
+        if(v.Marca!="" &&v.Dominio!="" &&v.Titular>0 &&v.AnoFabricacion>0)
         {
-            context.Add(v);
-            context.SaveChanges();
+            using (var context = new AseguradoraContext())
+            {
+                context.Add(v);
+                context.SaveChanges();
+            }
+        }else{
+            throw new Exception("Informacion de vehiculo invalida, revisar");
         }
     }
     public void ModificarVehiculo(Vehiculo V)
@@ -38,7 +43,8 @@ public class RepoVehiculo : IRepoVehiculo
             if(ve != null)
             {
                 V.ID = ve.ID;
-                context.Update(V);
+                context.Remove(ve);
+                context.Add(V);
                 context.SaveChanges();
             }else{
                 throw new Exception("No existe el vehículo con Dominio: "+V.Dominio);
@@ -69,5 +75,25 @@ public class RepoVehiculo : IRepoVehiculo
             listado = context.Vehiculos.ToList();
         }
         return listado;
+    }
+    public List<Vehiculo> ListarVehiculosCond(Func<Vehiculo,bool> f)
+    {
+        comprobarExistencia();
+        List<Vehiculo> listado;
+        using(var context = new AseguradoraContext())
+        {
+            listado = context.Vehiculos.Where(f).ToList();
+        }
+        return listado;
+    }
+    public Vehiculo? ObtenerVehiculo(int Id)
+    {
+        comprobarExistencia();
+        Vehiculo? v;
+        using(var context = new AseguradoraContext())
+        {
+            v = context.Vehiculos.Where(veh => veh.ID == Id).SingleOrDefault();
+        }
+        return v;
     }
 }
