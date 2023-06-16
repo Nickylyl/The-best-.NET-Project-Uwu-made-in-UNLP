@@ -1,0 +1,13 @@
+.divPrincipal{
+    width:100%; 
+    height: 100%;
+}
+
+.divP{
+    width:15%;
+}
+
+.divD{
+    display:flex; 
+    margin:4px;
+}

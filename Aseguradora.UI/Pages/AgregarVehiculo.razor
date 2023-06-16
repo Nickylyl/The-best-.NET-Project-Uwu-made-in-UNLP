@@ -1,1 +1,75 @@
-@page "/AgregarVehiculo"
+@page "/Vehiculo/{IdR:int?}"
+@inject AgregarVehiculoUseCase AgregarVehiculoUseCase;
+@inject ObtenerVehiculoUseCase ObtenerVehiculoUseCase;
+@inject ObtenerTitularUseCase ObtenerTitularUseCase;
+@inject NavigationManager Navegador;
+
+<PageTitle>Vehiculos</PageTitle>
+@if(_nuevoVehiculo)
+{
+    <h1>Agregar Vehiculo</h1>
+}else{
+    <h1>Modificando Vehiculo @_vehiculo.ID</h1>
+}
+
+<div class="divPrincipal">
+    <div class="divD">
+        <p class="divP">Dominio: </p>
+        <input @bind="_vehiculo.Dominio" class="form-control">
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">Marca: </p>
+        <input @bind="_vehiculo.Marca" class="form-control">
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">Año de Fabricación: </p>
+        <input @bind="_vehiculo.AnoFabricacion" class="form-control">
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">ID Titular: </p>
+        <input @bind="_vehiculo.Titular" class="form-control">
+        <br/>
+    </div>
+</div>
+<button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+
+<DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}"/>
+
+@code{
+    DialogoConfirmacion? Dialogo;
+    private Vehiculo _vehiculo = new Vehiculo("","",0,0);
+    [Parameter]public int? IdR {get;set;}
+    bool _nuevoVehiculo = true;
+    protected override void OnParametersSet()
+    {
+        if(IdR != null)
+        {
+            Vehiculo? veHallado = ObtenerVehiculoUseCase.Ejecutar(IdR.Value);
+            if(veHallado!=null)
+            {
+                _vehiculo = veHallado;
+                _nuevoVehiculo= false;
+            }
+        }
+    }
+    private void Comprobar()
+    {
+        Titular? t = ObtenerTitularUseCase.Ejecutar(_vehiculo.Titular);
+        if(t!=null)
+        {
+            try{    
+                AgregarVehiculoUseCase.Ejecutar(_vehiculo);
+                Navegador.NavigateTo("/ListarVehiculo");
+            }catch(Exception e){
+                if (Dialogo != null) Dialogo.Mensaje = e.Message;
+                Dialogo?.Mostrar();
+            }
+        }else{
+            if (Dialogo != null) Dialogo.Mensaje = "El titular no existe";
+            Dialogo?.Mostrar();
+        }
+    }
+}

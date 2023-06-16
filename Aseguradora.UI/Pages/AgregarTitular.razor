@@ -1,1 +1,82 @@
-@page "/AgregarTitular"
+@page "/Titular/{IdR:int?}"
+@inject AgregarTitularUseCase AgregarTitularUseCase;
+@inject ObtenerTitularUseCase ObtenerTitularUseCase;
+@inject NavigationManager Navegador;
+
+<PageTitle>Titulares</PageTitle>
+@if(_nuevoTitular)
+{
+    <h1>Agregar Titular</h1>
+}else{
+    <h1>Modificando Titular @_titular.ID</h1>
+}
+<div class="divPrincipal">
+    <div class="divD">
+        <p class="divP">DNI: </p>
+        <input @bind="_titular.DNI" class="form-control">
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">Apellido: </p>
+        <input @bind="_titular.Apellido" class="form-control">
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">Nombre: </p>
+        <input @bind="_titular.Nombre" class="form-control">
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">Dirección: </p>
+        <input @bind="_titular.Direccion" class="form-control">
+        <br/>
+    </div>
+    <div class="divD">
+        <p class="divP">Teléfono: </p>
+        <input @bind="_titular.Telefono" class="form-control">
+        <br />
+    </div>
+    <div class="divD">
+        <p class="divP">E-Mail: </p>
+        <input @bind="_titular.Email" class="form-control">
+        <br />
+    </div>
+</div>
+<button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+
+<DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}"/>
+
+@code{
+    DialogoConfirmacion? Dialogo;
+    private Titular _titular = new Titular();
+    [Parameter] public int? IdR { get; set; }
+    bool _nuevoTitular = true;
+    protected override void OnParametersSet()
+    {
+        if(IdR != null)
+        {
+            Titular? titHallado = ObtenerTitularUseCase.Ejecutar(IdR.Value);
+            if(titHallado!=null)
+            {
+                _titular = titHallado;
+                _nuevoTitular= false;
+            }
+        }
+        if(_nuevoTitular)
+        {
+            _titular.DNI = 0;
+            _titular.Apellido = "";
+            _titular.Nombre = "";
+        }
+    }
+    private void Comprobar()
+    {
+        try{
+            AgregarTitularUseCase.Ejecutar(_titular);
+            Navegador.NavigateTo("/ListarTitular");
+        }catch(Exception e){
+            if(Dialogo!=null) Dialogo.Mensaje = e.Message;
+            Dialogo?.Mostrar();
+        }
+    }
+}

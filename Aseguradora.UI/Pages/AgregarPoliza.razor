@@ -1,11 +1,17 @@
-@page "/AgregarPoliza"
+@page "/Poliza/{IdRecivido:int?}"
 @inject AgregarPolizaUseCase AgregarPolizaUseCase;
+@inject ObtenerPolizaUseCase ObtenerPolizaUseCase;
 @inject NavigationManager Navegador;
 
-<PageTitle>Agregar Poliza</PageTitle>
-<h1>Agregar Poliza</h1>
+<PageTitle>Polizas</PageTitle>
+@if(_nuevaPoliza)
+{
+    <h1>Agregar Poliza</h1>
+}else{
+    <h1>Modificando Poliza @_poliza.ID</h1>
+}
 
-<div class="divPrincipal"tyle="">
+<div class="divPrincipal">
     <div class="divD">
         <p class="divP">ID Vehiculo: </p>
         <input @bind="_poliza.VehiculoAsegurado" class="form-control">
@@ -37,39 +43,41 @@
 </div>
 <button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
 
-<DialogoConfirmacion @ref=Dialogo Mensaje="@mensaje" OnConfirmado="null"/>
+<DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}"/>
 
 @code{
     DialogoConfirmacion? Dialogo;
-    private string mensaje ="";
     private Poliza _poliza = new Poliza();
-    protected override void OnInitialized()
+
+    [Parameter] public int? IdRecivido { get; set; }
+
+    bool _nuevaPoliza = true;
+    protected override void OnParametersSet()
     {
-        _poliza.VigenteHasta = DateTime.Now.AddYears(1);
-        _poliza.Cobertura = "Responsabilidad Civil";
-        _poliza.Franquicia = "";
+        if(IdRecivido != null)
+        {
+            Poliza? polHallada = ObtenerPolizaUseCase.Ejecutar(IdRecivido.Value);
+            if(polHallada!=null)
+            {
+                _poliza = polHallada;
+                _nuevaPoliza = false;
+            }
+        }
+        if(_nuevaPoliza){
+            _poliza.VigenteHasta = DateTime.Now.AddYears(1);
+            _poliza.Cobertura = "Responsabilidad Civil";
+            _poliza.Franquicia = "";
+        }
     }
     private void Comprobar()
     {
-        if(_poliza.VigenteHasta.CompareTo(DateTime.Now)>0)
-        {
-            if(_poliza.Franquicia != "")
-            {
-                Cargar();
-            }else{
-                mensaje="No se ingreso una Franquicia";
-                Dialogo?.Mostrar();
-            }
-        }else{
-            mensaje="La fecha de vencimiento es incorrecta";
-            _poliza.VigenteHasta = DateTime.Now.AddYears(1);
+        _poliza.VigenteDesde = DateTime.Now;
+        try{
+            AgregarPolizaUseCase.Ejecutar(_poliza);
+            Navegador.NavigateTo("/ListarPoliza");
+        }catch(Exception e){
+            if(Dialogo!=null) Dialogo.Mensaje = e.Message;
             Dialogo?.Mostrar();
         }
-    }
-    private void Cargar()
-    {
-        _poliza.VigenteDesde = DateTime.Now;
-        AgregarPolizaUseCase.Ejecutar(_poliza);
-        Navegador.NavigateTo("/ListarPoliza");        
     }
 }
