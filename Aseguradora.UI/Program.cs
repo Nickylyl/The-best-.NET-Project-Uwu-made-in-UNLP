@@ -34,6 +34,7 @@ builder.Services.AddTransient<ObtenerSiniestroUseCase>();
 builder.Services.AddScoped<IRepoSiniestro,RepoSiniestro>();
 
 builder.Services.AddTransient<ListarVehiculosUseCase>();
+builder.Services.AddTransient<ListarVehiculosCondUseCase>();
 builder.Services.AddTransient<AgregarVehiculoUseCase>();
 builder.Services.AddTransient<ModificarVehiculoUseCase>();
 builder.Services.AddTransient<EliminarVehiculoUseCase>();
