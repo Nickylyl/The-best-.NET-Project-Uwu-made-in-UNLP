@@ -2,7 +2,7 @@ namespace Aseguradora.Aplicacion;
 
 public class Poliza
 {
-    public int ID { get; set; } 
+    public int ID { get; set; }
     public int VehiculoAsegurado { get; set; }
     public double ValorAsegurado { get; set; }
     public string? Franquicia { get; set; }
@@ -26,7 +26,7 @@ public class Poliza
     public override string ToString()
     {
         return  $"{ID}: VehiculoAsegurado:{VehiculoAsegurado} ValorAsegurado:{ValorAsegurado}"+
-                $" Franquicia:{Franquicia} Cobertura:{Cobertura} VigenteDesde:{VigenteDesde:dd/MM/yy}"+
-                $" VigenteHasta:{VigenteHasta:dd/MM/yy}";
+                $" Franquicia:{Franquicia} Cobertura:{Cobertura} VigenteDesde:{VigenteDesde:d}"+
+                $" VigenteHasta:{VigenteHasta:d}";
     }
 }
