@@ -8,7 +8,13 @@
 
 <DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarVehiculo"/>
 <title> LISTAR VEHICULO </title>
-<h3> <center> <b>LISTA DE VEHICULO</b> </center> </h3>
+
+@if(! _esTitular )
+{
+    <h1>LISTA DE VEHICULOS</h1>
+}else{
+    <h1>LISTA DE VEHICULOS DEL TITULAR @Id </h1>
+}
 
 <table class="table">
     <thead>
@@ -45,7 +51,7 @@
 
 @code{ 
     List<Vehiculo> _lista = new List<Vehiculo>();
-
+    bool _esTitular =false;
     [Parameter] public int? Id {get; set; }
 
 
@@ -53,6 +59,7 @@
             if( Id != null){ 
                 Titular? titular = ObtenerTitularUseCase.Ejecutar(Id.Value);
                 if(titular != null){
+                    _esTitular = true;
                     _lista = ListarVehiculosCondUseCase.Ejecutar( v => v.Titular == Id.Value );
                 }
             }

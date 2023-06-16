@@ -15,6 +15,7 @@
     <th>Direccion</th>
     <th>Email</th>
     <th>MODIFICAR-ELIMINAR</th>
+    <th>Listar sus vehiculos</th>
     </tr>
     </thead>
 
@@ -28,13 +29,17 @@
             <td>@titular.Email</td>
         </tr>
         <td>
-            <button class="btn btn-primary" @onclick ="() => ConfirmarModificarTitular(titular.ID)">
+            <button class="btn btn-primary" @onclick="() => ConfirmarModificarTitular(titular.ID)">
             <span class = "oi oi-pencil"></span>
             </button>
             <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarTitular(titular)"> 
             <span class = "oi oi-delete"></span>
             </button>
+            <button class="btn btn-secondary" @onclick="()=> ListarVehiculosDeXTit(titular.ID)">
+            <span class = "oi oi-list"></span>
+            </button>
         </td>
+      
     }
 
     </tbody>
@@ -64,4 +69,9 @@
         private void ConfirmarModificarTitular(int id){
             Navegador.NavigateTo("/Titular/" + id);
         }
+
+        private void ListarVehiculosDeXTit(int id){
+            Navegador.NavigateTo("/ListarVehiculo/" + id);
+        }
+
 }   
