@@ -12,7 +12,7 @@ public class Poliza
     public Poliza(int vehiculoAsegurado, double valorAsegurado, string franquicia, string cobertura, DateTime vigenteDesde, DateTime vigenteHasta)
     {
         VehiculoAsegurado = vehiculoAsegurado;
-        ValorAsegurado = valorAsegurado;
+        ValorAsegurado = valorAsegurado;d
         Franquicia = franquicia;
         Cobertura = cobertura;
         VigenteDesde = vigenteDesde;
@@ -27,6 +27,6 @@ public class Poliza
     {
         return  $"{ID}: VehiculoAsegurado:{VehiculoAsegurado} ValorAsegurado:{ValorAsegurado}"+
                 $" Franquicia:{Franquicia} Cobertura:{Cobertura} VigenteDesde:{VigenteDesde:d}"+
-                $" VigenteHasta:{VigenteHasta:d}";
+                $" VigenteHasta:{VigenteHasta:MM/dd/yyyy}";
     }
 }
