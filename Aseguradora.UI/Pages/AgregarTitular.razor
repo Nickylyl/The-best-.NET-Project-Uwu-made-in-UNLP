@@ -1,6 +1,7 @@
 @page "/Titular/{IdR:int?}"
 @inject AgregarTitularUseCase AgregarTitularUseCase;
 @inject ObtenerTitularUseCase ObtenerTitularUseCase;
+@inject ModificarTitularUseCase ModificarTitularUseCase;
 @inject NavigationManager Navegador;
 
 <PageTitle>Titulares</PageTitle>
@@ -42,8 +43,12 @@
         <br />
     </div>
 </div>
-<button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
-
+@if (_nuevoTitular)
+{
+    <button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+}else{
+    <button class="btn btn-primary" @onclick="Comprobar">Modificar</button>
+}
 <DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}"/>
 
 @code{
@@ -72,7 +77,12 @@
     private void Comprobar()
     {
         try{
-            AgregarTitularUseCase.Ejecutar(_titular);
+            if(_nuevoTitular)
+            {
+                AgregarTitularUseCase.Ejecutar(_titular);
+            }else{
+                ModificarTitularUseCase.Ejecutar(_titular);
+            }
             Navegador.NavigateTo("/ListarTitular");
         }catch(Exception e){
             if(Dialogo!=null) Dialogo.Mensaje = e.Message;

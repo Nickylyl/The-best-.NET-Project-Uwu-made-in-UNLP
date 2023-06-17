@@ -1,7 +1,7 @@
 @page "/ListarSiniestro"
 
-@inject ListarSiniestrosUseCase ListarSiniestroUseCase
-@inject EliminarSiniestroUseCase EliminarSiniestroUseCase
+@inject ListarSiniestrosUseCase ListarSiniestroUseCase;
+@inject EliminarSiniestroUseCase EliminarSiniestroUseCase;
 @inject NavigationManager Navegador;
 
 <DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarSiniestro"></DialogoConfirmacion>
@@ -26,19 +26,19 @@
     <tr>
         <td>@siniestro.ID</td>
         <td>@siniestro.Poliza</td>
-        <td>@siniestro.FechaCargaSistema</td>
-        <td>@siniestro.FechaOcurrencia</td>
+        <td>@siniestro.FechaCargaSistema.ToString("dd/MM/yyyy")</td>
+        <td>@siniestro.FechaOcurrencia.ToString("dd/MM/yyyy")</td>
         <td>@siniestro.DireccionDelHecho</td>
         <td>@siniestro.DescripcionDelHecho</td>
+        <td>
+            <button class="btn btn-primary" @onclick=" () => ConfirmarModificarSiniestro(siniestro.ID)">
+                <span class="oi oi-pencil"></span>
+            </button>
+            <button class="btn btn-danger" @onclick="()=>ConfirmarEliminarSiniestro(siniestro)">
+                <span class="oi oi-delete"></span>
+            </button>
+        </td>
     </tr>
-    <td>
-         <button class="btn btn-primary" @onclick=" () => ConfirmarModificarSiniestro(siniestro.ID)">
-         <span class = "oi oi-pencil"></span>
-         </button>
-         <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarSiniestro(siniestro)"> 
-         <span class = "oi oi-delete"></span>
-         </button>
-     </td>
     }
 
 </tbody>
@@ -51,7 +51,7 @@
             _lista = ListarSiniestroUseCase.Ejecutar(); 
         }
 
-        DialogoConfirmacion mensaje = null;
+        DialogoConfirmacion mensaje = null!;
         Siniestro? siniestroAEliminar = null;
         private void ConfirmarEliminarSiniestro(Siniestro siniestro){
             siniestroAEliminar = siniestro;

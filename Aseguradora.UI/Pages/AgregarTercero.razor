@@ -1,7 +1,8 @@
 @page "/Tercero/{IdR:int?}"
 @inject AgregarTerceroUseCase AgregarTerceroUseCase;
 @inject ObtenerTerceroUseCase ObtenerTerceroUseCase;
-@inject ObtenerSiniestroUseCase ObtenerSiniestroUseCase;
+@inject ModificarTerceroUseCase ModificarTerceroUseCase;
+@inject ListarSiniestrosUseCase ListarSiniestrosUseCase;
 @inject NavigationManager Navegador;
 
 <PageTitle>Terceros</PageTitle>
@@ -39,11 +40,21 @@
     </div>
     <div class="divD">
         <p class="divP">ID siniestro: </p>
-        <input @bind="_tercero.Siniestro" class="form-control">
+        <InputSelect @bind-Value="_tercero.Siniestro" class="form-control">
+            @foreach (var sin in _listaSiniestros)
+            {
+                <option value=@sin.ID>@sin.ID</option>
+            }
+        </InputSelect>
         <br/>
     </div>
 </div>
-<button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+@if (_nuevoTercero)
+{
+    <button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+}else{
+    <button class="btn btn-primary" @onclick="Comprobar">Modificar</button>
+}
 
 <DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}"/>
 
@@ -52,6 +63,12 @@
     private Tercero _tercero = new Tercero(0,"","","",0);
     [Parameter] public int? IdR { get; set; }
     bool _nuevoTercero = true;
+    List<Siniestro> _listaSiniestros = new();
+    protected override void OnInitialized()
+    {
+        _listaSiniestros = ListarSiniestrosUseCase.Ejecutar();
+    }
+    
     protected override void OnParametersSet()
     {
         if(IdR != null)
@@ -66,20 +83,18 @@
     }
     private void Comprobar()
     {
-        Siniestro? s = ObtenerSiniestroUseCase.Ejecutar(_tercero.Siniestro);
-        if(s!=null)
-        {
-            if(_tercero.DNI>0 &&_tercero.Siniestro>0 &&_tercero.Nombre!="" &&_tercero.Apellido!="" &&_tercero.Aseguradora!="" &&_tercero.Telefono!="")
+        try{
+            if(_nuevoTercero)
             {
                 AgregarTerceroUseCase.Ejecutar(_tercero);
-                Navegador.NavigateTo("/ListarTercero");
             }else{
-                if (Dialogo != null) Dialogo.Mensaje = "Uno de los campos es invalido o está vacio";
-                Dialogo?.Mostrar();
+                ModificarTerceroUseCase.Ejecutar(_tercero);
             }
-        }else{
-            if(Dialogo!=null) Dialogo.Mensaje = "No existe el siniestro";
+            Navegador.NavigateTo("/ListarTercero");
+        }catch (Exception e){
+            if(Dialogo!=null)Dialogo.Mensaje = e.Message;
             Dialogo?.Mostrar();
         }
     }
 }
+

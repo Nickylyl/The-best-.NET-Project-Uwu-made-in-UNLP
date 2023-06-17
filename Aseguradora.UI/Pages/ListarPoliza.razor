@@ -1,7 +1,8 @@
 @page "/ListarPoliza"
 
-@inject ListarPolizasUseCase ListarPolizasUseCase
-@inject EliminarPolizaUseCase EliminarPolizaUseCase
+@inject ListarPolizasUseCase ListarPolizasUseCase;
+@inject EliminarPolizaUseCase EliminarPolizaUseCase;
+@inject ObtenerVehiculoUseCase ObtenerVehiculoUseCase;
 @inject NavigationManager Navegador;
 
 
@@ -14,11 +15,11 @@
     <thead>
     <tr>
     <th>ID</th>
-    <th>ID VEHICULO</th>
+    <th>DOMINIO VEHICULO</th>
     <th>VALOR ASEGURADO DEL VEHICULO</th>
     <th>FRANQUICIA</th>
     <th>COBERTURA</th>
-    <th>FECHA VIGENCIA</th>Poliz
+    <th>FECHA VIGENCIA</th>
     <th>FECHA VENCIMIENTO</th>
     <th>MODIFICAR-ELIMINAR</th>
     </tr>
@@ -30,12 +31,12 @@
     {
     <tr>
         <td>@poliza.ID</td>
-        <td>@poliza.VehiculoAsegurado</td>
+        <td>@ObtenerVehiculoUseCase.Ejecutar(poliza.VehiculoAsegurado)?.Dominio</td>
         <td>@poliza.ValorAsegurado</td>
         <td>@poliza.Franquicia</td>
         <td>@poliza.Cobertura</td>
-        <td>@poliza.VigenteDesde</td>
-        <td>@poliza.VigenteHasta</td>
+        <td>@poliza.VigenteDesde.ToString("dd/MM/yyyy")</td>
+        <td>@poliza.VigenteHasta.ToString("dd/MM/yyyy")</td>
         <td>
             <button class="btn btn-primary" @onclick ="()=> ConfimarModificarPoliza(poliza.ID)">
                 <span class = "oi oi-pencil"></span>

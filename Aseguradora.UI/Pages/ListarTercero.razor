@@ -1,8 +1,8 @@
 @page "/ListarTercero"
 
-@inject ListarTercerosUseCase ListarTercerosUseCase
-@inject EliminarTerceroUseCase EliminarTerceroUseCase
-@inject NavigationManager Navegador
+@inject ListarTercerosUseCase ListarTercerosUseCase;
+@inject EliminarTerceroUseCase EliminarTerceroUseCase;
+@inject NavigationManager Navegador;
 
 <DialogoConfirmacion @ref="mensaje" OnConfirmado="eliminarTercero"/>
 <title> LISTAR TERCERO </title>
@@ -30,17 +30,16 @@
         <td>@tercero.Apellido</td>
         <td>@tercero.Nombre</td>
         <td>@tercero.Aseguradora</td>
-        <td>@tercero.Siniestro</td>      
+        <td>@tercero.Siniestro</td>
+        <td>
+            <button class="btn btn-primary" @onclick="() => ConfirmarModificarTercero(tercero.ID)">
+                <span class="oi oi-pencil"></span>
+            </button>
+            <button class="btn btn-danger" @onclick="()=>ConfirmarEliminarTercero(tercero)">
+                <span class="oi oi-delete"></span>
+            </button>
+        </td>
     </tr>
-    
-    <td>
-         <button class="btn btn-primary" @onclick="() => ConfirmarModificarTercero(tercero.ID)">
-         <span class = "oi oi-pencil"></span>
-         </button>
-         <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarTercero(tercero)"> 
-         <span class = "oi oi-delete"></span>
-         </button>
-    </td>
     }
 
 </tbody>

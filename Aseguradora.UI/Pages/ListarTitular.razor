@@ -1,6 +1,6 @@
 @page "/ListarTitular"
-@inject ListarTitularesUseCase ListarTitularUseCase
-@inject EliminarTitularUseCase EliminarTitularUseCase
+@inject ListarTitularesUseCase ListarTitularUseCase;
+@inject EliminarTitularUseCase EliminarTitularUseCase;
 @inject NavigationManager Navegador;
 <DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarTitular"/>
 <title> LISTAR TITULARES </title>
@@ -14,8 +14,7 @@
     <th>Nombre</th>
     <th>Direccion</th>
     <th>Email</th>
-    <th>MODIFICAR-ELIMINAR</th>
-    <th>Listar sus vehiculos</th>
+    <th>MODIFICAR-ELIMINAR-LISTAR VEHICULOS</th>
     </tr>
     </thead>
 
@@ -27,19 +26,18 @@
             <td>@titular.Nombre</td>
             <td>@titular.Direccion</td>
             <td>@titular.Email</td>
+            <td>
+                <button class="btn btn-primary" @onclick="() => ConfirmarModificarTitular(titular.ID)">
+                    <span class="oi oi-pencil"></span>
+                </button>
+                <button class="btn btn-danger" @onclick="()=>ConfirmarEliminarTitular(titular)">
+                    <span class="oi oi-delete"></span>
+                </button>
+                <button class="btn btn-secondary" @onclick="()=> ListarVehiculosDeXTit(titular.ID)">
+                    <span class="oi oi-list"></span>
+                </button>
+            </td>
         </tr>
-        <td>
-            <button class="btn btn-primary" @onclick="() => ConfirmarModificarTitular(titular.ID)">
-            <span class = "oi oi-pencil"></span>
-            </button>
-            <button class ="btn btn-danger" @onclick="()=>ConfirmarEliminarTitular(titular)"> 
-            <span class = "oi oi-delete"></span>
-            </button>
-            <button class="btn btn-secondary" @onclick="()=> ListarVehiculosDeXTit(titular.ID)">
-            <span class = "oi oi-list"></span>
-            </button>
-        </td>
-      
     }
 
     </tbody>

@@ -1,7 +1,8 @@
 @page "/Vehiculo/{IdR:int?}"
 @inject AgregarVehiculoUseCase AgregarVehiculoUseCase;
 @inject ObtenerVehiculoUseCase ObtenerVehiculoUseCase;
-@inject ObtenerTitularUseCase ObtenerTitularUseCase;
+@inject ModificarVehiculoUseCase ModificarVehiculoUseCase;
+@inject ListarTitularesUseCase ListarTitularesUseCase;
 @inject NavigationManager Navegador;
 
 <PageTitle>Vehiculos</PageTitle>
@@ -29,13 +30,22 @@
         <br/>
     </div>
     <div class="divD">
-        <p class="divP">ID Titular: </p>
-        <input @bind="_vehiculo.Titular" class="form-control">
+        <p class="divP">Titular: </p>
+        <InputSelect @bind-Value="_vehiculo.Titular" class="form-control">
+            @foreach (var tit in _listaTitulares)
+            {
+                <option value=@tit.ID>@tit.DNI</option>
+            }
+        </InputSelect>
         <br/>
     </div>
 </div>
-<button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
-
+@if (_nuevoVehiculo)
+{
+    <button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+}else{
+    <button class="btn btn-primary" @onclick="Comprobar">Modificar</button>
+}
 <DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}"/>
 
 @code{
@@ -43,6 +53,12 @@
     private Vehiculo _vehiculo = new Vehiculo("","",0,0);
     [Parameter]public int? IdR {get;set;}
     bool _nuevoVehiculo = true;
+    List<Titular> _listaTitulares = new();
+    protected override void OnInitialized()
+    {
+        _listaTitulares = ListarTitularesUseCase.Ejecutar();
+    }
+    
     protected override void OnParametersSet()
     {
         if(IdR != null)
@@ -57,18 +73,16 @@
     }
     private void Comprobar()
     {
-        Titular? t = ObtenerTitularUseCase.Ejecutar(_vehiculo.Titular);
-        if(t!=null)
-        {
-            try{    
+        try{
+            if(_nuevoVehiculo)
+            {
                 AgregarVehiculoUseCase.Ejecutar(_vehiculo);
-                Navegador.NavigateTo("/ListarVehiculo");
-            }catch(Exception e){
-                if (Dialogo != null) Dialogo.Mensaje = e.Message;
-                Dialogo?.Mostrar();
+            }else{
+                ModificarVehiculoUseCase.Ejecutar(_vehiculo);
             }
-        }else{
-            if (Dialogo != null) Dialogo.Mensaje = "El titular no existe";
+            Navegador.NavigateTo("/ListarVehiculo");
+        }catch(Exception e){
+            if (Dialogo != null) Dialogo.Mensaje = e.Message;
             Dialogo?.Mostrar();
         }
     }

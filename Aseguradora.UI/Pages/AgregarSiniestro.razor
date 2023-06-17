@@ -1,7 +1,8 @@
 @page "/Siniestro/{IdR:int?}"
 @inject AgregarSiniestroUseCase AgregarSiniestroUseCase;
 @inject ObtenerSiniestroUseCase ObtenerSiniestroUseCase;
-@inject ObtenerPolizaUseCase ObtenerPolizaUseCase
+@inject ModificarSiniestroUseCase ModificarSiniestroUseCase;
+@inject ListarPolizasUseCase ListarPolizasUseCase;
 @inject NavigationManager Navegador;
 
 <PageTitle>Siniestros</PageTitle>
@@ -17,7 +18,12 @@ else
 <div class="divPrincipal">
     <div class="divD">
         <p class="divP">ID Poliza: </p>
-        <input @bind="_siniestro.Poliza" class="form-control">
+        <InputSelect @bind-Value="_siniestro.Poliza" class="form-control">
+            @foreach (var poli in _listaPolizas)
+            {
+                <option value=@poli.ID>@poli.ID</option>
+            }
+        </InputSelect>
         <br />
     </div>
     <div class="divD">
@@ -36,7 +42,13 @@ else
         <br />
     </div>
 </div>
-<button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+@if(_nuevoSiniestro)
+{
+    <button class="btn btn-primary" @onclick="Comprobar">Agregar</button>
+}else{
+    <button class="btn btn-primary" @onclick="Comprobar">Modificar</button>
+}
+
 
 <DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}" />
 
@@ -45,6 +57,12 @@ else
     private Siniestro _siniestro = new Siniestro();
     [Parameter] public int? IdR { get; set; }
     bool _nuevoSiniestro = true;
+    List<Poliza> _listaPolizas = new();
+    protected override void OnInitialized()
+    {
+        _listaPolizas = ListarPolizasUseCase.Ejecutar();
+    }
+    
     protected override void OnParametersSet()
     {
         if (IdR != null)
@@ -64,21 +82,20 @@ else
     }
     private void Comprobar()
     {
-        _siniestro.FechaCargaSistema = DateTime.Now;
-        Poliza? pol = ObtenerPolizaUseCase.Ejecutar(_siniestro.Poliza);
-        if(pol!=null)
-        {
-            if(pol.VigenteHasta.CompareTo(_siniestro.FechaCargaSistema) > 0)
+        try{
+            if(_nuevoSiniestro)
             {
                 AgregarSiniestroUseCase.Ejecutar(_siniestro);
-                Navegador.NavigateTo("/ListarSiniestro");
             }else{
-                if(Dialogo!=null) Dialogo.Mensaje = "La póliza está vencida";
-                Dialogo?.Mostrar();
+                ModificarSiniestroUseCase.Ejecutar(_siniestro);
             }
-        }else{
-            if (Dialogo != null) Dialogo.Mensaje = "La póliza no existe";
+            Navegador.NavigateTo("/ListarSiniestro");
+        }catch(Exception e){
+            if(Dialogo!=null)Dialogo.Mensaje = e.Message;
             Dialogo?.Mostrar();
         }
+        
     }
 }
+
+
