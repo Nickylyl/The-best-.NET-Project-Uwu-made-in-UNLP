@@ -27,8 +27,14 @@ public class RepoVehiculo : IRepoVehiculo
         {
             using (var context = new AseguradoraContext())
             {
-                context.Add(v);
-                context.SaveChanges();
+                var t = context.Titulares.Where(ti => ti.ID == v.Titular).SingleOrDefault();
+                if(t!=null)
+                {
+                    context.Add(v);
+                    context.SaveChanges();
+                }else{
+                    throw new Exception("El titular no es valido");
+                }
             }
         }else{
             throw new Exception("Informacion de vehiculo invalida, revisar");
@@ -42,11 +48,17 @@ public class RepoVehiculo : IRepoVehiculo
             Vehiculo? ve = context.Vehiculos.Where(n => n.Dominio==V.Dominio).SingleOrDefault();
             if(ve != null)
             {
-                ve.AnoFabricacion = V.AnoFabricacion;
-                ve.Dominio = V.Dominio;
-                ve.Marca = V.Marca;
-                ve.Titular = V.Titular;
-                context.SaveChanges();
+                var tit = context.Titulares.Where(t => t.ID == V.Titular).SingleOrDefault();
+                if(tit != null)
+                {
+                    ve.AnoFabricacion = V.AnoFabricacion;
+                    ve.Dominio = V.Dominio;
+                    ve.Marca = V.Marca;
+                    ve.Titular = V.Titular;
+                    context.SaveChanges();
+                }else{
+                    throw new Exception("No existe el titular");
+                }
             }else{
                 throw new Exception("No existe el vehículo con Dominio: "+V.Dominio);
             }

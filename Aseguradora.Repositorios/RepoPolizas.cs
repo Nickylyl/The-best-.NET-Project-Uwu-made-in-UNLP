@@ -29,8 +29,14 @@ public class RepoPolizas : IRepoPoliza
             {
                 using (var context = new AseguradoraContext())
                 {
-                    context.Add(p);
-                    context.SaveChanges();
+                    var v = context.Vehiculos.Where(ve => ve.ID == p.VehiculoAsegurado).SingleOrDefault();
+                    if(v!=null)
+                    {
+                        context.Add(p);
+                        context.SaveChanges();
+                    }else{
+                        throw new Exception("El vehiculo asegurado no es valido");
+                    }
                 }
             }else{
                 throw new Exception("No se ingreso una Franquicia");

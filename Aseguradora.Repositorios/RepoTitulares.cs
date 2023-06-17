@@ -44,19 +44,27 @@ public class RepoTitulares : IRepoTitular{
     public void ModificarTitular(Titular T)
     {
         comprobarExistencia();
-        using(var context = new AseguradoraContext()){
-            var tit = context.Titulares.Where(tit => tit.DNI == T.DNI).SingleOrDefault();
+        using(var context = new AseguradoraContext()){ 
+            // busca la id del titular para modificarlo
+            Titular? tit = context.Titulares.Where(tit => tit.ID == T.ID).SingleOrDefault(); 
             if( tit != null){
-                tit.Apellido = T.Apellido;
-                tit.Direccion = T.Direccion;
-                tit.DNI = T.DNI;
-                tit.Email = T.Email;
-                tit.Nombre = T.Nombre;
-                tit.Telefono = T.Telefono;
-                context.SaveChanges();
+                // comprueba si el dni no está usado antes de actualizar el titular de dicha id
+                var t2 = context.Titulares.Where(tit => tit.DNI == T.DNI).SingleOrDefault();
+                if(t2==null)
+                {
+                    tit.DNI = T.DNI;
+                    tit.Apellido = T.Apellido;
+                    tit.Direccion = T.Direccion;
+                    tit.Email = T.Email;
+                    tit.Nombre = T.Nombre;
+                    tit.Telefono = T.Telefono;
+                    context.SaveChanges();
+                }else{
+                    throw new Exception("El dni ingresado no es valido.");
+                }
             }
             else{
-                throw new Exception("El Titular ingresado a modificar no existe.");
+                throw new Exception("El Titular ingresado a modificar no es valido.");
             }
         }
     }

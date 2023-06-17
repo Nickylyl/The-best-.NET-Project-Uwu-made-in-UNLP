@@ -24,13 +24,20 @@ public class RepoTerceros : IRepoTercero
     {
         comprobarExistencia();
         using(var context = new AseguradoraContext()){
-            var t = context.Terceros.Where(ter=> ter.DNI == T.DNI).SingleOrDefault();
-            if( t == null){
-                context.Add(T);
-                context.SaveChanges();
-            }
-            else{
-                throw new Exception("El Tercero ya existe");
+            // comprobamos que exista el siniestro
+            var sin = context.Siniestros.Where(sins => sins.ID == T.Siniestro).SingleOrDefault();
+            if(sin!=null)
+            {
+                // comprobamos que los datos no sean vacios o por defecto
+                if(T.DNI > 0 && T.Siniestro > 0 && T.Nombre != "" && T.Apellido != "" && T.Aseguradora != "" && T.Telefono != "")
+                {
+                    context.Add(T);
+                    context.SaveChanges();
+                }else{
+                    throw new Exception("Algunos campos son invalidos");
+                }
+            }else{
+                throw new Exception("El siniestro no existe");
             }
         }
     }
@@ -38,18 +45,25 @@ public class RepoTerceros : IRepoTercero
     {
         comprobarExistencia();
         using(var context = new AseguradoraContext()){
-            var ter = context.Terceros.Where(ter => ter.DNI == T.DNI).SingleOrDefault();
+            // buscamos el tercero
+            var ter = context.Terceros.Where(ters => ters.ID == T.ID).SingleOrDefault();
             if( ter != null){
-                ter.Apellido = T.Apellido;
-                ter.Aseguradora = T.Aseguradora;
-                ter.DNI = T.DNI;
-                ter.Nombre = T.Nombre;
-                ter.Siniestro = T.Siniestro;
-                ter.Telefono = T.Telefono;
-                context.SaveChanges();
+                // comprobamos si el siniestro es valido
+                var sin = context.Siniestros.Where(sins => sins.ID == T.Siniestro).SingleOrDefault();
+                if(sin != null){
+                    ter.Apellido = T.Apellido;
+                    ter.Aseguradora = T.Aseguradora;
+                    ter.DNI = T.DNI;
+                    ter.Nombre = T.Nombre;
+                    ter.Siniestro = T.Siniestro;
+                    ter.Telefono = T.Telefono;
+                    context.SaveChanges();
+                }else{
+                    throw new Exception("No existe el siniestro");
+                }
             }
             else{
-                throw new Exception("El Tercero = {0} ingresado a modificar no existe." + T.ToString());
+                throw new Exception("El Tercero a modificar no existe.");
             }
         }
     }
