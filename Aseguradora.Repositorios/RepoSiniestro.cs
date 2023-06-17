@@ -23,48 +23,67 @@ public class RepoSiniestro : IRepoSiniestro
     public void AgregarSiniestro(Siniestro  S)
     {
         comprobarExistencia();
-        using(var context = new AseguradoraContext())
+        if (S.FechaOcurrencia.CompareTo(DateTime.Now) <= 0)
         {
-            var pol = context.Polizas.Where( p => S.Poliza == p.ID).SingleOrDefault();
-            if(pol!=null)
+            using (var context = new AseguradoraContext())
             {
-                S.FechaCargaSistema = DateTime.Now;
-                if(pol.VigenteHasta.CompareTo(S.FechaCargaSistema)>0)
+                var pol = context.Polizas.Where(p => S.Poliza == p.ID).SingleOrDefault();
+                if (pol != null)
                 {
-                    context.Add(S);
-                    context.SaveChanges();
-                }else{
-                    throw new Exception("La poliza está vencida");
+                    S.FechaCargaSistema = DateTime.Now;
+                    if (pol.VigenteHasta.CompareTo(S.FechaCargaSistema) > 0)
+                    {
+                        context.Add(S);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("La poliza está vencida");
+                    }
                 }
-            }else{
-                throw new Exception("No existe la poliza asociada");
+                else
+                {
+                    throw new Exception("No existe la poliza asociada");
+                }
             }
+        }else{
+            throw new Exception("La fecha de ocurrencia no puede ser en el futuro");
         }
+        
     }
     public void ModificarSiniestro(Siniestro  S)
     {
         comprobarExistencia();
-        using(var context = new AseguradoraContext())
+        if(S.FechaOcurrencia.CompareTo(DateTime.Now)<=0)
         {
-            // comprobamos que existe el siniestro
-            var sin = context.Siniestros.Where(n => n.ID==S.ID).SingleOrDefault();
-            if(sin != null)
+            using (var context = new AseguradoraContext())
             {
-                // comprobamos que existe la poliza
-                var pol = context.Polizas.Where(n=> sin.Poliza == n.ID).SingleOrDefault();
-                if(pol!=null)
+                // comprobamos que existe el siniestro
+                var sin = context.Siniestros.Where(n => n.ID == S.ID).SingleOrDefault();
+                if (sin != null)
                 {
-                    sin.DescripcionDelHecho = S.DescripcionDelHecho;
-                    sin.DireccionDelHecho = S.DireccionDelHecho;
-                    sin.FechaOcurrencia = S.FechaOcurrencia;
-                    sin.Poliza = S.Poliza;
-                    context.SaveChanges();
-                }else{
-                    throw new Exception("Poliza Invalida ");
-                }                
-            }else{
-                throw new Exception("No existe Siniestro con ID: "+S.ID);
+                    // comprobamos que existe la poliza
+                    var pol = context.Polizas.Where(n => sin.Poliza == n.ID).SingleOrDefault();
+                    if (pol != null)
+                    {
+                        sin.DescripcionDelHecho = S.DescripcionDelHecho;
+                        sin.DireccionDelHecho = S.DireccionDelHecho;
+                        sin.FechaOcurrencia = S.FechaOcurrencia;
+                        sin.Poliza = S.Poliza;
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Poliza Invalida ");
+                    }
+                }
+                else
+                {
+                    throw new Exception("No existe Siniestro con ID: " + S.ID);
+                }
             }
+        }else{
+            throw new Exception("La fecha de ocurrencia no puede ser en el futuro");
         }
     }
     public void EliminarSiniestro(int ID)

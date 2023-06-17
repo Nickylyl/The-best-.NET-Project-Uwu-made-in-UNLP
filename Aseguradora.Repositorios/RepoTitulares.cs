@@ -50,7 +50,7 @@ public class RepoTitulares : IRepoTitular{
             if( tit != null){
                 // comprueba si el dni no está usado antes de actualizar el titular de dicha id
                 var t2 = context.Titulares.Where(tit => tit.DNI == T.DNI).SingleOrDefault();
-                if(t2==null)
+                if(t2==null || t2.ID==tit.ID)
                 {
                     tit.DNI = T.DNI;
                     tit.Apellido = T.Apellido;
