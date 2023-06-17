@@ -13,7 +13,7 @@ public class AseguradoraContext : DbContext{
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite("data source=Escuela.sqlite");
+        optionsBuilder.UseSqlite("data source=Aseguradora.sqlite");
     }
 
 }
