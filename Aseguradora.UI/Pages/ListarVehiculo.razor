@@ -73,7 +73,7 @@
         private void ConfirmarEliminarVehiculo(Vehiculo vehi){
             vehiAEliminar = vehi;
             mensaje.Mensaje = $"¿Esta seguro que quiere eliminar el vehiculo {vehi.Marca} del Titular {vehi.Titular}?";
-            _lista = ListarVehiculosUseCase.Ejecutar();
+            mensaje.Mostrar();
         }
 
         private void EliminarVehiculo(){
