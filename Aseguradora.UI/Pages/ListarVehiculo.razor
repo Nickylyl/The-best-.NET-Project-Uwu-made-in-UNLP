@@ -34,7 +34,7 @@
             <td>@vehiculo.ID</td>
             <td>@vehiculo.Dominio</td>
             <td>@vehiculo.Marca</td>
-            <td>@vehiculo.AnoFabricacion.ToString("dd/MM/yyyy")</td>
+            <td>@vehiculo.AnoFabricacion</td>
             <td>@ObtenerTitularUseCase.Ejecutar(vehiculo.Titular)?.DNI</td>
             <td>
                 <button class="btn btn-primary" @onclick ="() => ConfirmarModificarVehiculo(vehiculo.ID)">

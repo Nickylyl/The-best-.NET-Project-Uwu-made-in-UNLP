@@ -16,6 +16,7 @@
     <th>FECHA CARGA</th>
     <th>FECHA OCURRENCIA</th>
     <th>DIRECCION DEL HECHO</th>
+    <th>DESCRIPCION DEL HECHO</th>
     <th>MODIFICAR-ELIMINAR</th>
     </tr>
     </thead>
@@ -67,6 +68,6 @@
         }
 
         private void ConfirmarModificarSiniestro(int id){
-            Navegador.NavigateTo("/Siniestro" +id);
+            Navegador.NavigateTo("/Siniestro/" +id);
         }
 }

@@ -13,6 +13,7 @@
     <th>Apellido</th>
     <th>Nombre</th>
     <th>Direccion</th>
+    <th>Telefono</th>
     <th>Email</th>
     <th>MODIFICAR-ELIMINAR-LISTAR VEHICULOS</th>
     </tr>
@@ -25,6 +26,7 @@
             <td>@titular.Apellido</td>
             <td>@titular.Nombre</td>
             <td>@titular.Direccion</td>
+            <td>@titular.Telefono</td>
             <td>@titular.Email</td>
             <td>
                 <button class="btn btn-primary" @onclick="() => ConfirmarModificarTitular(titular.ID)">
