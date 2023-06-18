@@ -9,6 +9,7 @@
 <table class="table">
     <thead>
     <tr>
+    <th>ID</th>
     <th>DNI</th>
     <th>Apellido</th>
     <th>Nombre</th>
@@ -22,6 +23,7 @@
     <tbody>
     @foreach(var titular in _lista){
         <tr>
+            <td>@titular.ID</td>
             <td>@titular.DNI</td>
             <td>@titular.Apellido</td>
             <td>@titular.Nombre</td>
