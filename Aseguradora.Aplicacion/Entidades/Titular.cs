@@ -4,6 +4,7 @@ public class Titular : Persona
 {
     public string? Direccion {get; set;}
     public string? Email {get; set;}
+    public List<Vehiculo>? Vehiculos { get; set; } // prop navegacion para las tablas segun el modelo
     public Titular(int dni, string apellido, string nombre):base(dni, apellido, nombre){}
     public Titular(int dni, string apellido, string nombre,string direccion,string email) : base(dni, apellido, nombre) { 
         Direccion = direccion;

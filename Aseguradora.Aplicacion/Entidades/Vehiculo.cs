@@ -6,14 +6,15 @@ public class Vehiculo
     public string? Dominio { get; set; }
     public string? Marca { get; set; }
     public int AnoFabricacion { get; set; }
-    public int Titular { get; set; }
+    public int TitularID { get; set; } // prop navegacion para las tablas segun el modelo
+    public List<Poliza>? Polizas {get;set;} // prop navegacion para las tablas segun el modelo
 
     public Vehiculo(string dominio, string marca, int anoFabricacion, int titular)
     {
         Dominio = dominio;
         Marca = marca;
         AnoFabricacion = anoFabricacion;
-        Titular = titular;
+        TitularID = titular;
     }
 
     public Vehiculo(){
@@ -22,6 +23,6 @@ public class Vehiculo
 
     public override string ToString()
     {
-        return  $"{ID}: Dominio:{Dominio} Marca:{Marca} AnoFabricacion:{AnoFabricacion} Titular:{Titular}";
+        return  $"{ID}: Dominio:{Dominio} Marca:{Marca} AnoFabricacion:{AnoFabricacion} Titular:{TitularID}";
     }
 }

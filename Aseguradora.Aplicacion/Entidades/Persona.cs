@@ -1,5 +1,7 @@
 namespace Aseguradora.Aplicacion;
-
+/*
+Clase abstracta para luego heredar TITULARES y TERCEROS
+*/
 public abstract class Persona
 {
     public int ID { get; set; }
