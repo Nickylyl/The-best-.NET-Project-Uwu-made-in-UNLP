@@ -40,7 +40,7 @@
     </div>
     <div class="divD">
         <p class="divP">ID siniestro: </p>
-        <InputSelect @bind-Value="_tercero.Siniestro" class="form-control">
+        <InputSelect @bind-Value="_tercero.SiniestroID" class="form-control">
             @foreach (var sin in _listaSiniestros)
             {
                 <option value=@sin.ID>@sin.ID</option>
@@ -56,10 +56,11 @@
     <button class="btn btn-primary" @onclick="Comprobar">Modificar</button>
 }
 
-<DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}"/>
+<DialogoConfirmacion @ref=Dialogo Mensaje="@msj" OnConfirmado="()=>{}"/>
 
 @code{
     DialogoConfirmacion? Dialogo;
+    string msj = "";
     private Tercero _tercero = new Tercero(0,"","","",0);
     [Parameter] public int? IdR { get; set; }
     bool _nuevoTercero = true;
@@ -71,7 +72,7 @@
     
     protected override void OnParametersSet()
     {
-        if(IdR != null)
+        if (IdR != null)// si se recibe un parametro se intenta cargar la informacion de la entidad para modificarla
         {
             Tercero? terHallado = ObtenerTerceroUseCase.Ejecutar(IdR.Value);
             if(terHallado!=null)
@@ -92,7 +93,7 @@
             }
             Navegador.NavigateTo("/ListarTercero");
         }catch (Exception e){
-            if(Dialogo!=null)Dialogo.Mensaje = e.Message;
+            msj = e.Message;
             Dialogo?.Mostrar();
         }
     }

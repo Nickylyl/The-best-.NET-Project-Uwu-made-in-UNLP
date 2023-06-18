@@ -15,8 +15,8 @@
 
 <div class="divPrincipal">
     <div class="divD">
-        <p class="divP">ID Vehiculo: </p>
-        <InputSelect @bind-Value="_poliza.VehiculoAsegurado" class="form-control">
+        <p class="divP">Vehiculo: </p>
+        <InputSelect @bind-Value="_poliza.VehiculoID" class="form-control">
             @foreach (var vehiculo in _listaVehiculos)
             {
                 <option value=@vehiculo.ID>@vehiculo.Dominio</option>
@@ -67,12 +67,12 @@
 <DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}"/>
 
 @code{
-    DialogoConfirmacion? Dialogo;
-    private Poliza _poliza = new Poliza();
+    DialogoConfirmacion? Dialogo; // componente dialogo
+    private Poliza _poliza = new Poliza(); // poliza a agregar
 
-    [Parameter] public int? IdRecivido { get; set; }
-    private List<Vehiculo> _listaVehiculos = new();
-    bool _nuevaPoliza = true;
+    [Parameter] public int? IdRecivido { get; set; } // parametro recivido por url
+    private List<Vehiculo> _listaVehiculos = new(); // listado de vehiculos para la seleccion
+    bool _nuevaPoliza = true; // booleano para saber si es poliza a agregar o modificar
     protected override void OnInitialized()
     {
         _listaVehiculos = ListarVehiculosUseCase.Ejecutar();
@@ -80,7 +80,7 @@
     
     protected override void OnParametersSet()
     {
-        if(IdRecivido != null)
+        if(IdRecivido != null) // si se recibe un parametro se intenta cargar la informacion de la entidad para modificarla
         {
             Poliza? polHallada = ObtenerPolizaUseCase.Ejecutar(IdRecivido.Value);
             if(polHallada!=null)
@@ -89,7 +89,7 @@
                 _nuevaPoliza = false;
             }
         }
-        if(_nuevaPoliza){
+        if(_nuevaPoliza){ // valores por defecto en la pagina
             _poliza.VigenteHasta = DateTime.Now.AddYears(1);
             _poliza.Cobertura = "Responsabilidad Civil";
             _poliza.Franquicia = "";

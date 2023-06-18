@@ -6,14 +6,14 @@
 @inject ListarVehiculosCondUseCase ListarVehiculosCondUseCase;
 @inject NavigationManager Navegador; 
 
-<DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarVehiculo"/>
+<DialogoConfirmacion @ref="mensaje" Mensaje="@msj" OnConfirmado="EliminarVehiculo"/>
 <title> LISTAR VEHICULO </title>
 
-@if(! _esTitular )
+@if(!_esTitular)
 {
     <h1>LISTA DE VEHICULOS</h1>
-}else{
-    <h1>LISTA DE VEHICULOS DEL TITULAR @Id </h1>
+}else if(_esTitular && Id!=null){
+    <h1>LISTA DE VEHICULOS DEL TITULAR @ObtenerTitularUseCase.Ejecutar(Id.Value)?.DNI </h1>
 }
 
 <table class="table">
@@ -35,7 +35,7 @@
             <td>@vehiculo.Dominio</td>
             <td>@vehiculo.Marca</td>
             <td>@vehiculo.AnoFabricacion</td>
-            <td>@ObtenerTitularUseCase.Ejecutar(vehiculo.Titular)?.DNI</td>
+            <td>@ObtenerTitularUseCase.Ejecutar(vehiculo.TitularID)?.DNI</td>
             <td>
                 <button class="btn btn-primary" @onclick ="() => ConfirmarModificarVehiculo(vehiculo.ID)">
                     <span class = "oi oi-pencil"></span>
@@ -53,39 +53,44 @@
     List<Vehiculo> _lista = new List<Vehiculo>();
     bool _esTitular =false;
     [Parameter] public int? Id {get; set; }
+    string msj = "";
 
-
-        protected override void OnParametersSet(){
-            if( Id != null){ 
-                Titular? titular = ObtenerTitularUseCase.Ejecutar(Id.Value);
-                if(titular != null){
-                    _esTitular = true;
-                    _lista = ListarVehiculosCondUseCase.Ejecutar( v => v.Titular == Id.Value );
-                }
-            }
-            else{
-                _lista = ListarVehiculosUseCase.Ejecutar();
+    protected override void OnParametersSet(){
+        if( Id != null){ 
+            Titular? titular = ObtenerTitularUseCase.Ejecutar(Id.Value);
+            if(titular != null){
+                _esTitular = true;
+                _lista = ListarVehiculosCondUseCase.Ejecutar( v => v.TitularID == Id.Value );
             }
         }
-
-        Vehiculo? vehiAEliminar = null;
-        DialogoConfirmacion mensaje = null!;
-        private void ConfirmarEliminarVehiculo(Vehiculo vehi){
-            vehiAEliminar = vehi;
-            mensaje.Mensaje = $"¿Esta seguro que quiere eliminar el vehiculo {vehi.Marca} del Titular {vehi.Titular}?";
-            mensaje.Mostrar();
+        else{
+            _lista = ListarVehiculosUseCase.Ejecutar();
         }
+    }
 
-        private void EliminarVehiculo(){
-            if( vehiAEliminar != null){
+    Vehiculo? vehiAEliminar = null;
+    DialogoConfirmacion mensaje = null!;
+    private void ConfirmarEliminarVehiculo(Vehiculo vehi){
+        vehiAEliminar = vehi;
+        msj = $"¿Esta seguro que quiere eliminar el vehiculo {vehi.Marca} del Titular {vehi.TitularID}?";
+        mensaje.Mostrar();
+    }
+
+    private void EliminarVehiculo(){
+        if( vehiAEliminar != null){
+            try{
                 EliminarVehiculoUseCase.Ejecutar(vehiAEliminar.ID);
                 _lista = ListarVehiculosUseCase.Ejecutar();
+            }catch(Exception e){
+                msj = e.Message;
+                mensaje.Mostrar();
             }
         }
+    }
 
-        private void ConfirmarModificarVehiculo(int id){
-            Navegador.NavigateTo("/Vehiculo/" + id);
-        }
+    private void ConfirmarModificarVehiculo(int id){
+        Navegador.NavigateTo("/Vehiculo/" + id);
+    }
 
 
 }

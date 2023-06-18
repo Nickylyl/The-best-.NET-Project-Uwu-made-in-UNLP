@@ -2,7 +2,7 @@
 @inject ListarTitularesUseCase ListarTitularUseCase;
 @inject EliminarTitularUseCase EliminarTitularUseCase;
 @inject NavigationManager Navegador;
-<DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarTitular"/>
+<DialogoConfirmacion @ref="mensaje" Mensaje="@msj" OnConfirmado="EliminarTitular"/>
 <title> LISTAR TITULARES </title>
 <h3> <center> <b>LISTA DE TITULARES</b> </center> </h3>
 
@@ -47,31 +47,36 @@
 
 @code{ 
     List<Titular> _lista = new List<Titular>();
-        protected override void OnInitialized(){
-            _lista = ListarTitularUseCase.Ejecutar();
-        }
+    protected override void OnInitialized(){
+        _lista = ListarTitularUseCase.Ejecutar();
+    }
+    string msj = "";
+    Titular? titularAEliminar = null;
+    DialogoConfirmacion mensaje = null!;
+    private void ConfirmarEliminarTitular(Titular titular){
+        titularAEliminar = titular;
+        msj = $"¿Esta seguro que quiere eliminar el titular {titular.Nombre} {titular.Apellido}?";
+        mensaje.Mostrar();
+    }
 
-        Titular? titularAEliminar = null;
-        DialogoConfirmacion mensaje = null!;
-        private void ConfirmarEliminarTitular(Titular titular){
-            titularAEliminar = titular;
-            mensaje.Mensaje = $"¿Esta seguro que quiere eliminar el titular {titular.Nombre} {titular.Apellido}?";
-            mensaje.Mostrar();
-        }
-
-        private void EliminarTitular(){
-            if( titularAEliminar != null){
+    private void EliminarTitular(){
+        if( titularAEliminar != null){
+            try{
                 EliminarTitularUseCase.Ejecutar(titularAEliminar.ID);
                 _lista = ListarTitularUseCase.Ejecutar();
+            }catch(Exception e){
+                msj=e.Message;
+                mensaje.Mostrar();
             }
         }
+    }
 
-        private void ConfirmarModificarTitular(int id){
-            Navegador.NavigateTo("/Titular/" + id);
-        }
+    private void ConfirmarModificarTitular(int id){
+        Navegador.NavigateTo("/Titular/" + id);
+    }
 
-        private void ListarVehiculosDeXTit(int id){
-            Navegador.NavigateTo("/ListarVehiculo/" + id);
-        }
+    private void ListarVehiculosDeXTit(int id){
+        Navegador.NavigateTo("/ListarVehiculo/" + id);
+    }
 
 }   

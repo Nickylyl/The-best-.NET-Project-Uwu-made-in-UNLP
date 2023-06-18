@@ -6,7 +6,7 @@
 @inject NavigationManager Navegador;
 
 
-<DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarPoliza"/>
+<DialogoConfirmacion @ref="mensaje" Mensaje="@msj" OnConfirmado="EliminarPoliza"/>
 <title> LISTAR POLIZAS </title>
 <h3> <center> <b>LISTA DE POLIZAS</b> </center> </h3>
 
@@ -31,7 +31,7 @@
     {
     <tr>
         <td>@poliza.ID</td>
-        <td>@ObtenerVehiculoUseCase.Ejecutar(poliza.VehiculoAsegurado)?.Dominio</td>
+        <td>@ObtenerVehiculoUseCase.Ejecutar(poliza.VehiculoID)?.Dominio</td>
         <td>@poliza.ValorAsegurado</td>
         <td>@poliza.Franquicia</td>
         <td>@poliza.Cobertura</td>
@@ -53,30 +53,35 @@
 
 @code{
     List<Poliza> _lista = new List<Poliza>();
-        protected override void OnInitialized()
-        {
-            _lista = ListarPolizasUseCase.Ejecutar(); 
-        }
+    protected override void OnInitialized()
+    {
+        _lista = ListarPolizasUseCase.Ejecutar(); 
+    }
 
+    string msj = "";
+    Poliza? polizaAEliminar = null;
+    DialogoConfirmacion mensaje = null!;
+    
+    private void ConfirmarEliminarPoliza(Poliza poliza){
+        polizaAEliminar = poliza;
+        msj = $"¿Esta seguro que quiere eliminar a la poliza del vehiculo {poliza.VehiculoID}?";
+        mensaje.Mostrar();
+    }
 
-        Poliza? polizaAEliminar = null;
-        DialogoConfirmacion mensaje = null!;
-        private void ConfirmarEliminarPoliza(Poliza poliza){
-            polizaAEliminar = poliza;
-            mensaje.Mensaje = $"¿Esta seguro que quiere eliminar a la poliza del vehiculo {poliza.VehiculoAsegurado}?";
-            mensaje.Mostrar();
-        }
-
-        private void EliminarPoliza(){
-            if( polizaAEliminar != null){
+    private void EliminarPoliza(){
+        if( polizaAEliminar != null){
+            try{
                 EliminarPolizaUseCase.Ejecutar(polizaAEliminar.ID);
                 _lista = ListarPolizasUseCase.Ejecutar();
+            }catch(Exception e){
+                msj=e.Message;
+                mensaje.Mostrar();
             }
+            
         }
+    }
 
-        private void ConfimarModificarPoliza(int id){
-            Navegador.NavigateTo("/Poliza/" +id);
-
-
-        }
+    private void ConfimarModificarPoliza(int id){
+        Navegador.NavigateTo("/Poliza/" +id);
+    }
 }   

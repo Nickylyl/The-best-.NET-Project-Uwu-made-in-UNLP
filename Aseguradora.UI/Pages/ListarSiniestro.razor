@@ -4,7 +4,7 @@
 @inject EliminarSiniestroUseCase EliminarSiniestroUseCase;
 @inject NavigationManager Navegador;
 
-<DialogoConfirmacion @ref="mensaje" OnConfirmado="EliminarSiniestro"></DialogoConfirmacion>
+<DialogoConfirmacion @ref="mensaje" Mensaje="@msj" OnConfirmado="EliminarSiniestro"></DialogoConfirmacion>
 <title> LISTAR SINIESTRO </title>
 <h3> <center> <b>LISTA DE SINIESTROS</b> </center> </h3>
 
@@ -26,7 +26,7 @@
     {
     <tr>
         <td>@siniestro.ID</td>
-        <td>@siniestro.Poliza</td>
+        <td>@siniestro.PolizaID</td>
         <td>@siniestro.FechaCargaSistema.ToString("dd/MM/yyyy")</td>
         <td>@siniestro.FechaOcurrencia.ToString("dd/MM/yyyy")</td>
         <td>@siniestro.DireccionDelHecho</td>
@@ -47,27 +47,33 @@
 
 @code{
     List<Siniestro> _lista = new List<Siniestro>();
-        protected override void OnInitialized()
-        {
-            _lista = ListarSiniestroUseCase.Ejecutar(); 
-        }
+    protected override void OnInitialized()
+    {
+        _lista = ListarSiniestroUseCase.Ejecutar(); 
+    }
 
-        DialogoConfirmacion mensaje = null!;
-        Siniestro? siniestroAEliminar = null;
-        private void ConfirmarEliminarSiniestro(Siniestro siniestro){
-            siniestroAEliminar = siniestro;
-            mensaje.Mensaje = $"¿Esta seguro que quiere eliminar el siniestro del dia {siniestro.FechaOcurrencia}?";
-            mensaje.Mostrar();
-        }
+    DialogoConfirmacion mensaje = null!;
+    string msj = "";
+    Siniestro? siniestroAEliminar = null;
+    private void ConfirmarEliminarSiniestro(Siniestro siniestro){
+        siniestroAEliminar = siniestro;
+        msj = $"¿Esta seguro que quiere eliminar el siniestro del dia {siniestro.FechaOcurrencia}?";
+        mensaje.Mostrar();
+    }
 
-        private void EliminarSiniestro(){
-            if( siniestroAEliminar != null){
+    private void EliminarSiniestro(){
+        if( siniestroAEliminar != null){
+            try{
                 EliminarSiniestroUseCase.Ejecutar(siniestroAEliminar.ID);
                 _lista = ListarSiniestroUseCase.Ejecutar();
-            }
+            }catch(Exception e){
+                msj = e.Message;
+                mensaje.Mostrar();
+            } 
         }
+    }
 
-        private void ConfirmarModificarSiniestro(int id){
-            Navegador.NavigateTo("/Siniestro/" +id);
-        }
+    private void ConfirmarModificarSiniestro(int id){
+        Navegador.NavigateTo("/Siniestro/" +id);
+    }
 }

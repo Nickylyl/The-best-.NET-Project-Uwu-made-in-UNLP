@@ -4,7 +4,7 @@
 @inject EliminarTerceroUseCase EliminarTerceroUseCase;
 @inject NavigationManager Navegador;
 
-<DialogoConfirmacion @ref="mensaje" OnConfirmado="eliminarTercero"/>
+<DialogoConfirmacion @ref="mensaje" Mensaje="@msj" OnConfirmado="eliminarTercero"/>
 <title> LISTAR TERCERO </title>
 <h3> <center> <b>LISTA DE TERCEROS</b> </center> </h3>
 
@@ -15,6 +15,7 @@
     <th>DNI</th>
     <th>APELLIDO</th>
     <th>NOMBRE</th>
+    <th>TELEFONO</th>
     <th>ASEGURADORA</th>
     <th>SINIESTRO</th>
     <th>MODIFICAR-ELIMINAR</th>
@@ -29,8 +30,9 @@
         <td>@tercero.DNI</td>
         <td>@tercero.Apellido</td>
         <td>@tercero.Nombre</td>
+        <td>@tercero.Telefono</td>
         <td>@tercero.Aseguradora</td>
-        <td>@tercero.Siniestro</td>
+        <td>@tercero.SiniestroID</td>
         <td>
             <button class="btn btn-primary" @onclick="() => ConfirmarModificarTercero(tercero.ID)">
                 <span class="oi oi-pencil"></span>
@@ -47,28 +49,34 @@
 
 @code{
     List<Tercero> _lista = new List<Tercero>();
-        protected override void OnInitialized()
-        {
-            _lista = ListarTercerosUseCase.Ejecutar();
-        }
+    protected override void OnInitialized()
+    {
+        _lista = ListarTercerosUseCase.Ejecutar();
+    }
+    string msj = "";
+    DialogoConfirmacion mensaje = null!;
+    Tercero? terceroAEliminar = null; 
 
-        DialogoConfirmacion mensaje = null!;
-        Tercero? terceroAEliminar = null; 
+    private void ConfirmarEliminarTercero(Tercero tercero){
+        terceroAEliminar = tercero;
+        msj = $"¿Esta seguro que quiere eliminar el Tercero {tercero.Nombre} {tercero.Apellido} ?";
+        mensaje.Mostrar();
+    }
 
-        private void ConfirmarEliminarTercero(Tercero tercero){
-            terceroAEliminar = tercero;
-            mensaje.Mensaje = $"¿Esta seguro que quiere eliminar el Tercero {tercero.Nombre} {tercero.Apellido} ?";
-            mensaje.Mostrar();
-        }
-
-        private void eliminarTercero(){
-            if( terceroAEliminar != null ){
+    private void eliminarTercero(){
+        if( terceroAEliminar != null ){
+            try{
                 EliminarTerceroUseCase.Ejecutar(terceroAEliminar.ID);
                 _lista = ListarTercerosUseCase.Ejecutar();
+            }catch(Exception e){
+                msj = e.Message;
+                mensaje.Mostrar();
             }
+            
         }
+    }
 
-        private void ConfirmarModificarTercero(int id){
-            Navegador.NavigateTo("/Tercero/" +id);
-        }
+    private void ConfirmarModificarTercero(int id){
+        Navegador.NavigateTo("/Tercero/" +id);
+    }
 }

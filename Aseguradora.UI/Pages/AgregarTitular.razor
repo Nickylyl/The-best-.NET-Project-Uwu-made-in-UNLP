@@ -49,16 +49,17 @@
 }else{
     <button class="btn btn-primary" @onclick="Comprobar">Modificar</button>
 }
-<DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}"/>
+<DialogoConfirmacion @ref=Dialogo Mensaje="@msj" OnConfirmado="()=>{}"/>
 
 @code{
     DialogoConfirmacion? Dialogo;
+    string msj = "";
     private Titular _titular = new Titular();
     [Parameter] public int? IdR { get; set; }
     bool _nuevoTitular = true;
     protected override void OnParametersSet()
     {
-        if(IdR != null)
+        if(IdR != null)// si se recibe un parametro se intenta cargar la informacion de la entidad para modificarla
         {
             Titular? titHallado = ObtenerTitularUseCase.Ejecutar(IdR.Value);
             if(titHallado!=null)
@@ -85,7 +86,7 @@
             }
             Navegador.NavigateTo("/ListarTitular");
         }catch(Exception e){
-            if(Dialogo!=null) Dialogo.Mensaje = e.Message;
+            msj = e.Message;
             Dialogo?.Mostrar();
         }
     }

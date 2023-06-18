@@ -18,7 +18,7 @@ else
 <div class="divPrincipal">
     <div class="divD">
         <p class="divP">ID Poliza: </p>
-        <InputSelect @bind-Value="_siniestro.Poliza" class="form-control">
+        <InputSelect @bind-Value="_siniestro.PolizaID" class="form-control">
             @foreach (var poli in _listaPolizas)
             {
                 <option value=@poli.ID>@poli.ID</option>
@@ -50,10 +50,11 @@ else
 }
 
 
-<DialogoConfirmacion @ref=Dialogo OnConfirmado="()=>{}" />
+<DialogoConfirmacion @ref=Dialogo Mensaje="@msj" OnConfirmado="()=>{}" />
 
 @code {
     DialogoConfirmacion? Dialogo;
+    string msj = "";
     private Siniestro _siniestro = new Siniestro();
     [Parameter] public int? IdR { get; set; }
     bool _nuevoSiniestro = true;
@@ -65,7 +66,7 @@ else
     
     protected override void OnParametersSet()
     {
-        if (IdR != null)
+        if (IdR != null)// si se recibe un parametro se intenta cargar la informacion de la entidad para modificarla
         {
             Siniestro? sinHallado = ObtenerSiniestroUseCase.Ejecutar(IdR.Value);
             if (sinHallado != null)
@@ -91,7 +92,7 @@ else
             }
             Navegador.NavigateTo("/ListarSiniestro");
         }catch(Exception e){
-            if(Dialogo!=null)Dialogo.Mensaje = e.Message;
+            msj = e.Message;
             Dialogo?.Mostrar();
         }
         
