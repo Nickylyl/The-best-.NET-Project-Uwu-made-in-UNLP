@@ -6,6 +6,11 @@ public class RepoSiniestro : IRepoSiniestro
 {
     void comprobarExistencia()
     {
+        /*
+            Comprobar existencia sirve para que si en runtime se elimina el archivo .sqlite
+            podamos recuperarlo sin necesidad de reiniciar todo el programa y a su vez sirve
+            de proteccion contra errores en tiempo de ejecucion o excepciones por falta de db
+        */
         using(var context = new AseguradoraContext())
         {
             if(context.Database.EnsureCreated())
@@ -27,18 +32,19 @@ public class RepoSiniestro : IRepoSiniestro
         {
             using (var context = new AseguradoraContext())
             {
-                var pol = context.Polizas.Where(p => S.Poliza == p.ID).SingleOrDefault();
+                var pol = context.Polizas.Where(p => S.PolizaID == p.ID).SingleOrDefault();
                 if (pol != null)
                 {
                     S.FechaCargaSistema = DateTime.Now;
-                    if (pol.VigenteHasta.CompareTo(S.FechaCargaSistema) > 0)
-                    {
-                        context.Add(S);
-                        context.SaveChanges();
+                    // si el vencimiento es despues de la fecha de carga y la vigencia arrancó antes de la ocurrencia ta todo bien y se carga
+                    if (pol.VigenteHasta.CompareTo(S.FechaCargaSistema) > 0 && pol.VigenteDesde.CompareTo(S.FechaOcurrencia) < 0)  // comparamos que las fechas tengan sentido
+                    {                                                       // es decir, si vencimiento es mayor que la fecha de carga
+                    context.Add(S);
+                    context.SaveChanges();
                     }
                     else
                     {
-                        throw new Exception("La poliza está vencida");
+                        throw new Exception("La poliza no es valida");
                     }
                 }
                 else
@@ -63,13 +69,16 @@ public class RepoSiniestro : IRepoSiniestro
                 if (sin != null)
                 {
                     // comprobamos que existe la poliza
-                    var pol = context.Polizas.Where(n => sin.Poliza == n.ID).SingleOrDefault();
+                    var pol = context.Polizas.Where(n => sin.PolizaID == n.ID).SingleOrDefault();
                     if (pol != null)
-                    {
+                    {// si el vencimiento es despues de la fecha de carga y la vigencia arrancó antes de la ocurrencia ta todo bien y se actualiza
+                        if(pol.VigenteHasta.CompareTo(sin.FechaCargaSistema)>0 && pol.VigenteDesde.CompareTo(sin.FechaOcurrencia)<0) 
+                        // actualizamos los datos campo a campo, esto se hace ya que las entidades obtenidas por context
+                        // estan conectadas a sus respectivos espacios en las tablas
                         sin.DescripcionDelHecho = S.DescripcionDelHecho;
                         sin.DireccionDelHecho = S.DireccionDelHecho;
                         sin.FechaOcurrencia = S.FechaOcurrencia;
-                        sin.Poliza = S.Poliza;
+                        sin.PolizaID = S.PolizaID;
                         context.SaveChanges();
                     }
                     else
@@ -91,7 +100,7 @@ public class RepoSiniestro : IRepoSiniestro
         comprobarExistencia();
         using(var context = new AseguradoraContext())
         {
-            var p = context.Siniestros.Where(n => n.ID==ID).SingleOrDefault();
+            var p = context.Siniestros.Where(n => n.ID==ID).SingleOrDefault(); // buscamos el siniestro a eliminar
             if(p != null)
             {
                 context.Remove(p);

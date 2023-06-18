@@ -6,6 +6,11 @@ public class RepoVehiculo : IRepoVehiculo
 {
     void comprobarExistencia()
     {
+        /*
+            Comprobar existencia sirve para que si en runtime se elimina el archivo .sqlite
+            podamos recuperarlo sin necesidad de reiniciar todo el programa y a su vez sirve
+            de proteccion contra errores en tiempo de ejecucion o excepciones por falta de db
+        */
         using(var context = new AseguradoraContext())
         {
             if(context.Database.EnsureCreated())
@@ -23,11 +28,11 @@ public class RepoVehiculo : IRepoVehiculo
     public void AgregarVehiculo(Vehiculo v)
     {
         comprobarExistencia();
-        if(v.Marca!="" &&v.Dominio!="" &&v.Titular>0 &&v.AnoFabricacion>0)
+        if(v.Marca!="" &&v.Dominio!="" &&v.TitularID >0 &&v.AnoFabricacion>0)
         {
             using (var context = new AseguradoraContext())
             {
-                var t = context.Titulares.Where(ti => ti.ID == v.Titular).SingleOrDefault();
+                var t = context.Titulares.Where(ti => ti.ID == v.TitularID).SingleOrDefault();
                 if(t!=null)
                 {
                     context.Add(v);
@@ -48,13 +53,15 @@ public class RepoVehiculo : IRepoVehiculo
             Vehiculo? ve = context.Vehiculos.Where(n => n.Dominio==V.Dominio).SingleOrDefault();
             if(ve != null)
             {
-                var tit = context.Titulares.Where(t => t.ID == V.Titular).SingleOrDefault();
+                var tit = context.Titulares.Where(t => t.ID == V.TitularID).SingleOrDefault();
                 if(tit != null)
                 {
+                    // actualizamos los datos campo a campo, esto se hace ya que las entidades obtenidas por context
+                    // estan conectadas a sus respectivos espacios en las tablas
                     ve.AnoFabricacion = V.AnoFabricacion;
                     ve.Dominio = V.Dominio;
                     ve.Marca = V.Marca;
-                    ve.Titular = V.Titular;
+                    ve.TitularID = V.TitularID;
                     context.SaveChanges();
                 }else{
                     throw new Exception("No existe el titular");

@@ -6,6 +6,11 @@ public class RepoTitulares : IRepoTitular{
     
     void comprobarExistencia()
     {
+        /*
+            Comprobar existencia sirve para que si en runtime se elimina el archivo .sqlite
+            podamos recuperarlo sin necesidad de reiniciar todo el programa y a su vez sirve
+            de proteccion contra errores en tiempo de ejecucion o excepciones por falta de db
+        */
         using(var context = new AseguradoraContext())
         {
             if(context.Database.EnsureCreated())
@@ -52,6 +57,8 @@ public class RepoTitulares : IRepoTitular{
                 var t2 = context.Titulares.Where(tit => tit.DNI == T.DNI).SingleOrDefault();
                 if(t2==null || t2.ID==tit.ID)
                 {
+                    // actualizamos los datos campo a campo, esto se hace ya que las entidades obtenidas por context
+                    // estan conectadas a sus respectivos espacios en las tablas
                     tit.DNI = T.DNI;
                     tit.Apellido = T.Apellido;
                     tit.Direccion = T.Direccion;
