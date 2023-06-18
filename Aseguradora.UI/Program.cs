@@ -3,7 +3,21 @@ using Microsoft.AspNetCore.Components.Web;
 using Aseguradora.UI.Data;
 using Aseguradora.Repositorios;
 using Aseguradora.Aplicacion;
+using Microsoft.EntityFrameworkCore;
 
+using (var context = new AseguradoraContext())
+{
+    if (context.Database.EnsureCreated())
+    {
+        var connection = context.Database.GetDbConnection();
+        connection.Open();
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandText = "PRAGMA journal_mode=DELETE;";
+            command.ExecuteNonQuery();
+        }
+    }
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
