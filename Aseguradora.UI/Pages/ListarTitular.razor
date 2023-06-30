@@ -1,6 +1,8 @@
 @page "/ListarTitular"
 @inject ListarTitularesUseCase ListarTitularUseCase;
 @inject EliminarTitularUseCase EliminarTitularUseCase;
+@inject ObtenerVehiculoUseCase ObtenerVehiculoUseCase;
+@inject ListarVehiculosCondUseCase ListarVehiculosCondUseCase;
 @inject NavigationManager Navegador;
 <DialogoConfirmacion @ref="mensaje" Mensaje="@msj" OnConfirmado="EliminarTitular"/>
 <title> LISTAR TITULARES </title>
@@ -47,10 +49,45 @@
     </tbody>
     </table>
 
+    <h3> <center> <b>LISTA DE VEHICULOS DE LOS TITULARES</b> </center> </h3>
+
+    <table class="table">
+    <thead>
+    <tr>
+    <td>vehiculo ID</td>
+    <td>vehiculo Dominio</td>
+    <td>vehiculo Marca</td>
+    <td>vehiculo AnoFabricacion</td>
+    <th>Titular </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @foreach(var vehiculo in _listaV){
+        <tr>
+          <td>@vehiculo.ID</td>
+            <td>@vehiculo.Dominio</td>
+            <td>@vehiculo.Marca</td>
+            <td>@vehiculo.AnoFabricacion</td>
+            <td>@vehiculo.TitularID</td>
+        </tr>
+    }
+
+    </tbody>
+    </table>
+
+
+
 @code{ 
     List<Titular> _lista = new List<Titular>();
+    List<Vehiculo> _listaV = new List<Vehiculo>();
     protected override void OnInitialized(){
         _lista = ListarTitularUseCase.Ejecutar();
+        foreach(var listita in _lista){
+            _listaV = ListarVehiculosCondUseCase.Ejecutar(v => listita.ID == listita.ID);
+            
+        }
+      
     }
     string msj = "";
     Titular? titularAEliminar = null;
