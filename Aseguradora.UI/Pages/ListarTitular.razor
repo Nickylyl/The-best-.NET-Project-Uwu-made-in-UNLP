@@ -2,7 +2,7 @@
 @inject ListarTitularesUseCase ListarTitularUseCase;
 @inject EliminarTitularUseCase EliminarTitularUseCase;
 @inject ObtenerVehiculoUseCase ObtenerVehiculoUseCase;
-@inject ListarVehiculosCondUseCase ListarVehiculosCondUseCase;
+@inject ListarVehiculosUseCase ListarVehiculosUseCase;
 @inject NavigationManager Navegador;
 <DialogoConfirmacion @ref="mensaje" Mensaje="@msj" OnConfirmado="EliminarTitular"/>
 <title> LISTAR TITULARES </title>
@@ -18,7 +18,8 @@
     <th>Direccion</th>
     <th>Telefono</th>
     <th>Email</th>
-    <th>MODIFICAR-ELIMINAR-LISTAR VEHICULOS</th>
+    <th>MODIFICAR-ELIMINAR</th>
+    <th>VEHICULOS</th>
     </tr>
     </thead>
 
@@ -43,38 +44,40 @@
                     <span class="oi oi-list"></span>
                 </button>
             </td>
+            <td>
+                @foreach (var v in _listaV.Where(v=>v.TitularID == titular.ID))
+                {
+                    <table class="table">
+                    <thead>
+                    <tr>
+                    <td>vehiculo ID</td>
+                    <td>vehiculo Dominio</td>
+                    <td>vehiculo Marca</td>
+                    <td>vehiculo AnoFabricacion</td>
+                    <th>Titular </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                        <td>@v.ID</td>
+                            <td>@v.Dominio</td>
+                            <td>@v.Marca</td>
+                            <td>@v.AnoFabricacion</td>
+                            <td>@v.TitularID</td>
+                        </tr>
+
+                    </tbody>
+                    </table>
+                }
+            </td>
         </tr>
     }
 
     </tbody>
     </table>
 
-    <h3> <center> <b>LISTA DE VEHICULOS DE LOS TITULARES</b> </center> </h3>
-
-    <table class="table">
-    <thead>
-    <tr>
-    <td>vehiculo ID</td>
-    <td>vehiculo Dominio</td>
-    <td>vehiculo Marca</td>
-    <td>vehiculo AnoFabricacion</td>
-    <th>Titular </th>
-    </tr>
-    </thead>
-
-    <tbody>
-    @foreach(var vehiculo in _listaV){
-        <tr>
-          <td>@vehiculo.ID</td>
-            <td>@vehiculo.Dominio</td>
-            <td>@vehiculo.Marca</td>
-            <td>@vehiculo.AnoFabricacion</td>
-            <td>@vehiculo.TitularID</td>
-        </tr>
-    }
-
-    </tbody>
-    </table>
+    
 
 
 
@@ -83,10 +86,7 @@
     List<Vehiculo> _listaV = new List<Vehiculo>();
     protected override void OnInitialized(){
         _lista = ListarTitularUseCase.Ejecutar();
-        foreach(var listita in _lista){
-            _listaV = ListarVehiculosCondUseCase.Ejecutar(v => listita.ID == listita.ID);
-            
-        }
+        _listaV = ListarVehiculosUseCase.Ejecutar();
       
     }
     string msj = "";
